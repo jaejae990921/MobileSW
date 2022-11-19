@@ -8,12 +8,15 @@ public class Player : MonoBehaviour
     public float speed;
     public GameObject[] weapons; //플레이어 무기관련 변수
     public bool[] hasWeapons; //플레이어 무기관련 변수
+    public GameObject[] grenades; //공전하는 물체를 컨트롤하기 위해 배열변수 생성
+    public int hasGrenades; //수류탄
 
     //아이템 변수 선언
-    public int ammo;
-    public int coin;
-    public int health;
-    public int hasGrenades;
+    public int ammo; //탄약
+    public int coin; //동전
+    public int health; //체력
+
+
     //각 수치의 최대값을 저장할 변수 생성
     public int maxAmmo;
     public int maxCoin;
@@ -189,6 +192,39 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("isJump", false);
             isJump = false; //바닥에 닿으면 점프를 할 수 있음
+        }
+    }
+
+    void OnTriggerEnter(Collider other) //트리거 이벤트
+    {
+        if(other.tag == "Item")
+        {
+            Item item = other.GetComponent<Item>();
+            switch (item.type)
+            {
+                case Item.Type.Ammo:
+                    ammo += item.value; //enum 타입에 맞게 아이템 수치를 플레이어 수치에 적용하기
+                    if (ammo > maxAmmo)
+                        ammo = maxAmmo;
+                    break;
+                case Item.Type.Coin:
+                    coin += item.value; //enum 타입에 맞게 아이템 수치를 플레이어 수치에 적용하기
+                    if (coin > maxCoin)
+                        coin = maxCoin;
+                    break;
+                case Item.Type.Heart:
+                    health += item.value; //enum 타입에 맞게 아이템 수치를 플레이어 수치에 적용하기
+                    if (health > maxHealth)
+                        health = maxHealth;
+                    break;
+                case Item.Type.Grenade:
+                    grenades[hasGrenades].SetActive(true); //수류탄 개수대로 공전체가 활성화 되도록 구현
+                    hasGrenades += item.value; //enum 타입에 맞게 아이템 수치를 플레이어 수치에 적용하기
+                    if (hasGrenades > maxHasGrenades)
+                        hasGrenades = maxHasGrenades;
+                    break;
+            }
+            Destroy(other.gameObject); //먹은 아이템은 삭제
         }
     }
 
