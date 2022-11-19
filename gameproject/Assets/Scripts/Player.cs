@@ -232,7 +232,6 @@ public class Player : MonoBehaviour
     {
         if (other.tag == "Weapon") //weapon 태그를 조건으로 하여 로직 작성
             nearObject = other.gameObject; //near오브젝트에 저장
-        Debug.Log(nearObject.name);
     }
 
     void OnTriggerExit(Collider other) //트리거 이벤트
