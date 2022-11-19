@@ -368,6 +368,7 @@
 "Assets/Scripts/Item.cs"
 "Assets/Scripts/Orbit.cs"
 "Assets/Scripts/Player.cs"
+"Assets/Scripts/Weapon.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:9.0
 
