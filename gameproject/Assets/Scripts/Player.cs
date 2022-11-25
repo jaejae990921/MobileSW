@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     public bool[] hasWeapons; //플레이어 무기관련 변수
     public GameObject[] grenades; //공전하는 물체를 컨트롤하기 위해 배열변수 생성
     public int hasGrenades; //수류탄
+    public Camera followCamera; //플레이어에 메인카메라 변수 만듬
+
 
     //아이템 변수 선언
     public int ammo; //탄약
@@ -29,6 +31,7 @@ public class Player : MonoBehaviour
     bool wDown;
     bool jDown;
     bool fDown; //키입력
+    bool rDown; //재장전 변수
     bool iDown;
     bool sDown1; //무기교체 1번장비
     bool sDown2; //무기교체 2번장비
@@ -37,6 +40,7 @@ public class Player : MonoBehaviour
     bool isJump; //점프 한계설정
     bool isDodge; //회피
     bool isSwap; //무기교체동안에 아무것도 못하게함
+    bool isReload;
     bool isFireReady = true; //공격준비
     
     Vector3 moveVec;
@@ -65,6 +69,7 @@ public class Player : MonoBehaviour
         Turn();
         Jump();
         Attack();
+        Reload(); //재장전 함수
         Dodge();
         Swap();
         Interation();
@@ -76,7 +81,8 @@ public class Player : MonoBehaviour
         vAxis = Input.GetAxisRaw("Vertical"); //(위아래 컨트롤)
         wDown = Input.GetButton("Walk"); //shift 누른 상태에서만 걷게됨
         jDown = Input.GetButtonDown("Jump"); //누른즉시 점프
-        fDown = Input.GetButtonDown("Fire1"); //마운스 왼쪽 누르면 어택
+        fDown = Input.GetButton("Fire1"); //마운스 왼쪽 누르면 어택 (down을 빼면 꾹누르고 있어도 작동 가능함)
+        rDown = Input.GetButtonDown("Reload"); // r버튼을 누르면 재장전함.
         iDown = Input.GetButtonDown("Interation"); //e키를 누르면 iDown 활성화됨 (Edit -> project setting)
         sDown1 = Input.GetButtonDown("Swap1"); //무기 1번키를 받음
         sDown2 = Input.GetButtonDown("Swap2"); //무기 2번키를 받음
@@ -90,7 +96,7 @@ public class Player : MonoBehaviour
         if (isDodge)
             moveVec = dodgeVec; // 회피를 하고 있을경우 움직임 벡터 -> 회피방향 벡터로 바뀌는 코드(회피하면서 다른 방향키 사용불가)
         
-        if (isSwap || !isFireReady) //무기 교체시 움직임도 멈춤 , 공격중에는 이동불가
+        if (isSwap || isReload || !isFireReady) //무기 교체시 움직임도 멈춤 ,장전중, 공격중에는 이동불가
             moveVec = Vector3.zero;
 
         if (wDown)
@@ -103,11 +109,30 @@ public class Player : MonoBehaviour
         anim.SetBool("isWalk", wDown); //걷는 상태 구현
     }
 
+
+
     void Turn()
     {
-        //기본 회전 구현
+        //#1. 키보드에 의한 회전
         transform.LookAt(transform.position + moveVec); //우리가 나아가는 방향으로 바로 바라본다.
 
+
+        //#2. 마우스에 의한 회전 (마우스를 누르지 않아도 플레이어는 마우스 커서만 바라봄)
+        if (fDown) //마우스를 클릭 했을때
+        {
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+
+            if (Physics.Raycast(ray, out rayHit, 100)) //ray의 길이 100 , out은 return처럼 반환값을 주어진 변수에 저장하는 키워드
+            {
+                Vector3 nextVec = rayHit.point - transform.position; //마우스 클릭 위치 활용하여 회전을 구현
+
+                nextVec.y = 0; //RayCastHit의 높이는 무시하도록 y축 값을 0으로 초기화
+                
+                transform.LookAt(transform.position + nextVec); //그 위치로 플레이어가 돌아봄
+            }
+        }
+        
     }
 
     void Jump()
@@ -132,11 +157,37 @@ public class Player : MonoBehaviour
         if (fDown && isFireReady && !isDodge && !isSwap) //공격할때 같이 못누르는 값 설정
         {
             equipWeapon.Use(); //조건이 충족되면 무기에 있는 함수 실행
-            anim.SetTrigger("doSwing");
+            anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot"); //무기 타입에 따라 다른 트리거 실행
             fireDelay = 0; //공격 딜레이를 0으로 돌려서 다음 공격까지 기다리도록 작성
         }
     }
 
+    void Reload() //장전 함수 구현
+    {
+        if (equipWeapon == null) //손에 무기가 없으면 장전이 안됌
+            return;
+
+        if (equipWeapon.type == Weapon.Type.Melee) //근접 무기일 경우 장전이 안됌
+            return;
+
+        //우리는 총알이 없기 때문에 따로 ammo 설정을 안함.
+
+        if(rDown && !isJump && !isDodge && !isSwap && isFireReady) //점프, 회피, 무기 변경때는 장전이 불가.
+        {
+            anim.SetTrigger("doReload"); //애니메이터 트리거 호출과 플래그변수 변화 작성
+            isReload = true;
+
+            Invoke("ReloadOut", 3f); //장전시간 설정 3초 ★
+        }
+    }
+
+    void ReloadOut()
+    {
+        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
+        equipWeapon.curAmmo = equipWeapon.maxAmmo; //무기는 탄에 들어감
+        ammo -= reAmmo; //플레이어가 소지하고 있는 탄은 사라진다.
+        isReload = false;
+    }
 
     void Dodge()
     {
