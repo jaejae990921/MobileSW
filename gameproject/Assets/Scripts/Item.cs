@@ -8,8 +8,27 @@ public class Item : MonoBehaviour
     public Type type;
     public int value;
 
+
+    Rigidbody rigid; //아이템 물리 충돌을 담당하는 콜라이더와 충돌하여 문제 발생 fix
+    SphereCollider sphereCollider;
+
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        sphereCollider = GetComponent<SphereCollider>();
+    }
+
     void Update()
     {
         transform.Rotate(Vector3.up * 20 * Time.deltaTime);
+    }
+
+    void OnCollisionEnter(Collision collision) //물리효과 변경
+    {
+        if(collision.gameObject.tag == "Floor") //바닥에 닿음 조건
+        {
+            rigid.isKinematic = true; //rigidbody는 외부 물리 효과에 의해 움직이지 못하게함.
+            sphereCollider.enabled = false;
+        }
     }
 }

@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     bool isSwap; //무기교체동안에 아무것도 못하게함
     bool isReload;
     bool isFireReady = true; //공격준비
+    bool isBorder; //벽 충돌 플레그 변수
     
     Vector3 moveVec;
     Vector3 dodgeVec;
@@ -99,10 +100,13 @@ public class Player : MonoBehaviour
         if (isSwap || isReload || !isFireReady) //무기 교체시 움직임도 멈춤 ,장전중, 공격중에는 이동불가
             moveVec = Vector3.zero;
 
-        if (wDown)
-            transform.position += moveVec * speed * 0.3f * Time.deltaTime;
-        else
-            transform.position += moveVec * speed * Time.deltaTime; //shift 누르면 속도 느려짐
+        if (!isBorder) //플래그 변수를 이동 제한 조건으로 활용하기.
+        {
+            if (wDown)
+                transform.position += moveVec * speed * 0.3f * Time.deltaTime;
+            else
+                transform.position += moveVec * speed * Time.deltaTime; //shift 누르면 속도 느려짐
+        }
 
 
         anim.SetBool("isRun", moveVec != Vector3.zero); //뛰는 상태는 0이 아니면 뜀
@@ -258,7 +262,25 @@ public class Player : MonoBehaviour
             }
         }
     }
-    
+
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero; //회전속도를 vector3 제로로 설정하면 회전속도를 0으로 하기 때문에 스스로 도는 현상이 없어짐.
+    }
+
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green); //시작위치, 쏘는 방향, ray길이, 색깔
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall")); //벽 물체랑 충돌을 하게 되면 bool 값이 true가 된다. true값이 move에다가 제한값을 줌
+    }
+
+    private void FixedUpdate()
+    {
+        FreezeRotation(); //플레이어가 자동으로 회전하는거 막는 함수
+        StopToWall(); //벽 관통하는거 막는 함수
+    }
+
+
     void OnCollisionEnter(Collision collision) //이벤트 함수로 착지 구현
     {
         if(collision.gameObject.tag == "Floor")
