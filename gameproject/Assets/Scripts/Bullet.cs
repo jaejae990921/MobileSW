@@ -17,4 +17,12 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject); //딜레이 없이 삭제됨
         }
     }
+
+    void OnTriggerEnter(Collider other) //총알을 위해 OnTriggerEnter() 함수 로직 생성
+    {
+        if (other.gameObject.tag == "Wall")
+        {
+            Destroy(gameObject); //총알이 자연스럽게 사라지는 코드
+        }
+    }
 }
