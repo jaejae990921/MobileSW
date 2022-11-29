@@ -105,4 +105,8 @@ public class Player : MonoBehaviour
             nearObject = null; // 가까이있는 오브젝트를 null로
         }
     }
+
+    void sex() {
+        
+    }
 }
