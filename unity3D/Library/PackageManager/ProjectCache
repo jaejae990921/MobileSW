@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638034842721647839
-    m_Hash: 1818256272
+      ticks: 638053093128251804
+    m_Hash: 2380178278
   m_LockFileStatus:
     m_FilePath: C:/mobilesw/MobileSW/unity3D/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638034843269712203
-    m_Hash: 1650710922
+      ticks: 638053093128255720
+    m_Hash: 1130119296
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
