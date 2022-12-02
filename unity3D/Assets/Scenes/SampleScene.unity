@@ -1042,6 +1042,10 @@ MonoBehaviour:
   - {fileID: 1966061739}
   - {fileID: 1747780501}
   hasWeapons: 0000
+  ammo: 30
+  maxAmmo: 30
+  health: 5
+  maxHealth: 5
 --- !u!136 &1282425249
 CapsuleCollider:
   m_ObjectHideFlags: 0

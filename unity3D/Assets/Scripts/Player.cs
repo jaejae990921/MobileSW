@@ -10,6 +10,11 @@ public class Player : MonoBehaviour
     public GameObject[] weapons; // 무기 배열
     public bool[] hasWeapons; // 무기를 가졌는지 bool 배열
 
+    public int ammo; // 총알
+    public int maxAmmo; // 최대총알
+    public int health; // 체력
+    public int maxHealth; // 최대체력
+
     float hAxis; // x축값
     float vAxis; // y축값
 
@@ -17,12 +22,17 @@ public class Player : MonoBehaviour
     Vector3 dodgeVec; // 회피 벡터
 
     Animator anim; // 애니메이션
-
     Rigidbody rigid; // 물리효과
+
     bool jDodge; // 회피
     bool isDodge; // 회피 여부
+    bool isSwap; // 스왑 여부
+    bool sDown1; // 1번 버튼
+    bool sDown2; // 2번 버튼
 
     GameObject nearObject; // 트리거된 아이템을 저장
+    GameObject equipWeapon; // 손에 들고있는 무기 저장
+    int equipWeaponIndex = -1;// 손에 들고있는 무기의 인덱스
 
     void Awake()
     {
@@ -37,7 +47,8 @@ public class Player : MonoBehaviour
         Move(); // 이동
         Turn(); // 회전
         Dodge(); // 회피
-        Interaction();
+        Swap(); // 무기교체
+        Interaction(); // 무기획득
     }
 
     void GetInput() { // 입력 
@@ -47,6 +58,9 @@ public class Player : MonoBehaviour
 
         hAxis = Input.GetAxisRaw("Horizontal"); // x축 키보드
         vAxis = Input.GetAxisRaw("Vertical"); // y축 키보드
+
+        sDown1 = Input.GetButtonDown("Swap1");
+        sDown2 = Input.GetButtonDown("Swap2");
     }
 
     void Move() { // 이동구현
@@ -54,6 +68,11 @@ public class Player : MonoBehaviour
 
         if (isDodge) { // 회피중이라면
             moveVec = dodgeVec; // 이동방향을 회피방향으로 고정
+        }
+
+        if (isSwap)
+        {
+            moveVec = Vector3.zero;
         }
         transform.position += moveVec * speed * Time.deltaTime; // 이동속도
         
@@ -65,7 +84,7 @@ public class Player : MonoBehaviour
     }
 
     void Dodge() { // 회피구현
-    if (jDodge && moveVec != Vector3.zero && !isDodge ) { // 스페이스바 눌렀을때, 제자리가 아닐때, 회피중이 아닐때
+    if (jDodge && moveVec != Vector3.zero && !isDodge && !isSwap ) { // 스페이스바 눌렀을때, 제자리가 아닐때, 회피중이 아닐때, 스왑중이 아닐때
         dodgeVec = moveVec; // 회피하는 방향을 현재 바라보는 방향으로 고정
         speed = speed * 2; // 이동속도 2배 
         anim.SetTrigger("doDodge"); // 회피 애니메이션 실행
@@ -80,7 +99,39 @@ public class Player : MonoBehaviour
         isDodge = false; // 회피중 false로 변경
     }
 
-    void Interaction() {
+    void Swap() // 무기 교체
+    {
+        if (sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0)) return;// 무기가 없거나 같은무기를 들고있는 경우
+        if (sDown2 && (!hasWeapons[1] || equipWeaponIndex == 1)) return;// 무기가 없거나 같은무기를 들고있는 경우
+
+        int weaponIndex = -1;
+        if (sDown1) weaponIndex = 0; // 1 누르면 웨폰인덱스 0
+        if (sDown2) weaponIndex = 1; // 2 누르면 웨폰인덱스 1
+
+        if ((sDown1 || sDown2) && !isDodge && !isSwap) // 1,2번 눌렀을때, 회피중이 아닐때
+        {
+            if(equipWeapon != null) // 손에 뭘 들고있는 상태라면
+            {
+                equipWeapon.SetActive(false); // 원래 들고있던 무기를 안보이게 설정
+            }
+            equipWeaponIndex = weaponIndex; // 손에들고있는 무기 인덱스를 입력받은 무기의 인덱스로
+            equipWeapon = weapons[weaponIndex]; // 버튼 누른 무기를 손에 들고있는 무기로 설정
+            equipWeapon.SetActive(true); // 손에 들고 있는 무기를 보이게 설정
+
+            anim.SetTrigger("doSwap");
+
+            isSwap = true; // 스왑여부를 true로
+
+            Invoke("SwapOut", 0.4f);
+        }
+    }
+
+    void SwapOut()
+    { // 스왑동작 끝
+        isSwap = false; // 스왑여부 false
+    }
+
+    void Interaction() { // 무기획득
         if (nearObject != null && !isDodge) // 가까이있는 오브젝트가 null이 아닐때, 회피중이 아닐때
         {
             if (nearObject.tag == "Weapon") // 태그가 무기일때
