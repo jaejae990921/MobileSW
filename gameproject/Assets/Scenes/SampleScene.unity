@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1877,8 +1877,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1367653341}
   - component: {fileID: 1367653340}
+  - component: {fileID: 1367653342}
   m_Layer: 15
-  m_Name: GameObject
+  m_Name: EnemyBullet
   m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1893,7 +1894,7 @@ BoxCollider:
   m_GameObject: {fileID: 1367653339}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
@@ -1904,14 +1905,27 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367653339}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.34, y: 4.4525704, z: 13.53}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.09, y: 0.85, z: 2.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_Father: {fileID: 1847207530}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1367653342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367653339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fe156559b0b8f141a25eb0cecf7f16e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
 --- !u!1 &1446887197 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863,
@@ -2686,7 +2700,9 @@ MonoBehaviour:
   maxHealth: 50
   curHealth: 50
   target: {fileID: 1020897560}
+  meleeArea: {fileID: 1367653340}
   isChase: 0
+  isAttack: 0
 --- !u!65 &1847207528
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2716,6 +2732,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!4 &1847207530 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4462523135328065168, guid: 464cc7c4f7ea10b47a36d7848aa9ca9a,
+    type: 3}
+  m_PrefabInstance: {fileID: 470885939}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1958755093
 GameObject:
   m_ObjectHideFlags: 0

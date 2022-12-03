@@ -9,7 +9,11 @@ public class Enemy : MonoBehaviour
     public int maxHealth; //체력과 컴포넌스를 담을 변수 선언
     public int curHealth;
     public Transform target; //목표가 될 변수
+    public BoxCollider meleeArea; //콜라이더를 담을 변수 추가
     public bool isChase;
+    public bool isAttack;
+
+
 
     Rigidbody rigid;
     BoxCollider boxCollider;
@@ -36,9 +40,12 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-       
-        if (isChase)
+
+        if (nav.enabled) //네비게이션이 활성화 되어있을때만
+        {
             nav.SetDestination(target.position); //도착할 목표 위치 지정 함수
+            nav.isStopped = !isChase; //완벽하게 멈추도록 작성
+        }
     }
 
 
@@ -50,9 +57,45 @@ public class Enemy : MonoBehaviour
             rigid.angularVelocity = Vector3.zero; //회전속도를 vector3 제로로 설정하면 회전속도를 0으로 하기 때문에 스스로 도는 현상이 없어짐.
         }
     }
+    void Targetting()
+    {   //ShpereCast()의 반지름, 길이를 조정할 변수 선언
+        float targetRadius = 1.5f;
+        float targetRange = 3f;
+
+        RaycastHit[] rayHits =
+            Physics.SphereCastAll(transform.position, //자신의 위치
+            targetRadius,
+            transform.forward, targetRange, LayerMask.GetMask("Player"));
+
+        if (rayHits.Length > 0 && !isAttack) //rayHit 변수에 데이터가 들어오면 공격 코르틴 실행
+        {
+            StartCoroutine(Attack());
+        }
+    }
+    IEnumerator Attack() //몬스터 공격
+    {
+        isChase = false; //몬스터가 정지함
+        isAttack = true; //몬스터가 공격함
+        anim.SetBool("isAttack", true); //공격 애니메이션 적용
+
+        yield return new WaitForSeconds(0.2f); //애니메이션 작동을 위한 딜레이를 줌
+        meleeArea.enabled = true;
+
+        yield return new WaitForSeconds(1f); //애니메이션 작동을 위한 딜레이를 줌
+        meleeArea.enabled = false;
+
+   
+
+        isChase = true;
+        isAttack = false;
+        anim.SetBool("isAttack", false);
+
+   
+    }
 
     void FixedUpdate()
     {
+        Targetting();
         FreezeVelocity(); //플레이어가 자동으로 회전하는거 막는 함수
         
     }

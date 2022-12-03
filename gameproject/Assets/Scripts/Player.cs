@@ -332,7 +332,7 @@ public class Player : MonoBehaviour
             if (!isDamage)
             {
                 Bullet enemyBullet = other.GetComponent<Bullet>();
-                health -= enemyBullet.damage; //bullet 스크립트 재활용하여 데미지 적용 후
+                health -= enemyBullet.damage; //bullet 스크립트 재활용하여 데미지 적용
                 StartCoroutine(OnDamage()); //코르틴 적용.
             }
         }
