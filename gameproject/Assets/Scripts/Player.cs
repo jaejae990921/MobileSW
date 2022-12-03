@@ -43,12 +43,17 @@ public class Player : MonoBehaviour
     bool isReload;
     bool isFireReady = true; //공격준비
     bool isBorder; //벽 충돌 플레그 변수
-    
+    bool isDamage; //무적 타임
+
+
     Vector3 moveVec;
     Vector3 dodgeVec;
 
     Rigidbody rigid; //물리효과를 내기위해
     Animator anim;
+
+    MeshRenderer[] meshs; //배열 변수 추가
+
 
     GameObject nearObject; //트리거 된 아이템을 저장하기 위한 변수 선언
     Weapon equipWeapon; //기존에 장착된 무기를 저장하는 변수를 선언, 활용
@@ -59,6 +64,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>(); //위쪽에 있기 때문에 inchildren 안해도됨
         anim = GetComponentInChildren<Animator>();
+        meshs = GetComponentsInChildren<MeshRenderer>();
     }
 
 
@@ -274,7 +280,7 @@ public class Player : MonoBehaviour
         isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall")); //벽 물체랑 충돌을 하게 되면 bool 값이 true가 된다. true값이 move에다가 제한값을 줌
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         FreezeRotation(); //플레이어가 자동으로 회전하는거 막는 함수
         StopToWall(); //벽 관통하는거 막는 함수
@@ -292,7 +298,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter(Collider other) //트리거 이벤트
     {
-        if(other.tag == "Item")
+        if (other.tag == "Item")
         {
             Item item = other.GetComponent<Item>();
             switch (item.type)
@@ -321,7 +327,36 @@ public class Player : MonoBehaviour
             }
             Destroy(other.gameObject); //먹은 아이템은 삭제
         }
+        else if (other.tag == "EnemyBullet") //OnTriggerEnter()에 enemybullet 경우 추가
+        {
+            if (!isDamage)
+            {
+                Bullet enemyBullet = other.GetComponent<Bullet>();
+                health -= enemyBullet.damage; //bullet 스크립트 재활용하여 데미지 적용 후
+                StartCoroutine(OnDamage()); //코르틴 적용.
+            }
+        }
     }
+
+    IEnumerator OnDamage() //리액션을 위한 코루틴 생성 및 호출
+    {
+        isDamage = true;
+
+        foreach(MeshRenderer mesh in meshs) //모든 재질의 색상을 변경
+        {
+            mesh.material.color = Color.yellow;
+        }
+
+        yield return new WaitForSeconds(1f); //무적타임 조정
+
+        isDamage = false;
+        
+        foreach (MeshRenderer mesh in meshs) //모든 재질의 색상을 변경
+        {
+            mesh.material.color = Color.white;
+        }
+    }
+
 
     void OnTriggerStay(Collider other) //트리거 이벤트
     {
