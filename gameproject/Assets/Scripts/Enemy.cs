@@ -5,31 +5,34 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-
+    public enum Type { A, B, C, D }; //enum으로 타입을 나누고 변수를 생성
+    public Type enemyType;
     public int maxHealth; //체력과 컴포넌스를 담을 변수 선언
     public int curHealth;
     public Transform target; //목표가 될 변수
     public BoxCollider meleeArea; //콜라이더를 담을 변수 추가
+    public GameObject bullet;
     public bool isChase;
     public bool isAttack;
+    public bool isDead;
 
 
-
-    Rigidbody rigid;
-    BoxCollider boxCollider;
-    Material mat; //물체 색
-    NavMeshAgent nav;
-    Animator anim; //애니메이션
+    public Rigidbody rigid;
+    public BoxCollider boxCollider;
+    public MeshRenderer[] meshs; //물체 색
+    public NavMeshAgent nav;
+    public Animator anim; //애니메이션
 
     void Awake() //초기화
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
-        mat = GetComponentInChildren<MeshRenderer>().material;
+        meshs = GetComponentsInChildren<MeshRenderer>();
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
-        Invoke("ChaseStart", 2);
+        if(enemyType != Type.D)
+            Invoke("ChaseStart", 2);
     }
 
     void ChaseStart()
@@ -41,7 +44,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
 
-        if (nav.enabled) //네비게이션이 활성화 되어있을때만
+        if (nav.enabled && enemyType != Type.D) //네비게이션이 활성화 되어있을때만
         {
             nav.SetDestination(target.position); //도착할 목표 위치 지정 함수
             nav.isStopped = !isChase; //완벽하게 멈추도록 작성
@@ -58,18 +61,40 @@ public class Enemy : MonoBehaviour
         }
     }
     void Targetting()
-    {   //ShpereCast()의 반지름, 길이를 조정할 변수 선언
-        float targetRadius = 1.5f;
-        float targetRange = 3f;
-
-        RaycastHit[] rayHits =
-            Physics.SphereCastAll(transform.position, //자신의 위치
-            targetRadius,
-            transform.forward, targetRange, LayerMask.GetMask("Player"));
-
-        if (rayHits.Length > 0 && !isAttack) //rayHit 변수에 데이터가 들어오면 공격 코르틴 실행
+    { 
+        if(!isDead && enemyType != Type.D)
         {
-            StartCoroutine(Attack());
+
+            //ShpereCast()의 반지름, 길이를 조정할 변수 선언
+            float targetRadius = 0;
+            float targetRange = 0;
+
+            switch (enemyType) //타게팅 수치를 정하기 ★
+            {
+                case Type.A:
+                    targetRadius = 1.5f; //공격 폭
+                    targetRange = 3f; //공격범위
+                    break;
+                case Type.B:
+                    targetRadius = 1f; //공격 폭
+                    targetRange = 10f; //공격범위
+                    break;
+                case Type.C:
+                    targetRadius = 0.5f; //공격 폭
+                    targetRange = 25f; //공격범위
+                    break;
+            }
+
+
+            RaycastHit[] rayHits =
+                Physics.SphereCastAll(transform.position, //자신의 위치
+                targetRadius,
+                transform.forward, targetRange, LayerMask.GetMask("Player"));
+
+            if (rayHits.Length > 0 && !isAttack) //rayHit 변수에 데이터가 들어오면 공격 코르틴 실행
+            {
+                StartCoroutine(Attack());
+            }
         }
     }
     IEnumerator Attack() //몬스터 공격
@@ -78,11 +103,39 @@ public class Enemy : MonoBehaviour
         isAttack = true; //몬스터가 공격함
         anim.SetBool("isAttack", true); //공격 애니메이션 적용
 
-        yield return new WaitForSeconds(0.2f); //애니메이션 작동을 위한 딜레이를 줌
-        meleeArea.enabled = true;
+        switch (enemyType) //타게팅 수치를 정하기
+        {
+            case Type.A:
+                yield return new WaitForSeconds(0.2f); //애니메이션 작동을 위한 딜레이를 줌
+                meleeArea.enabled = true;
 
-        yield return new WaitForSeconds(1f); //애니메이션 작동을 위한 딜레이를 줌
-        meleeArea.enabled = false;
+                yield return new WaitForSeconds(1f); //애니메이션 작동을 위한 딜레이를 줌
+                meleeArea.enabled = false;
+                break;
+
+            case Type.B:
+                yield return new WaitForSeconds(0.1f); //애니메이션 작동을 위한 딜레이를 줌
+                rigid.AddForce(transform.forward * 20, ForceMode.Impulse); //돌격 구현 20파워
+                meleeArea.enabled = true;
+
+                yield return new WaitForSeconds(0.5f);
+                rigid.velocity = Vector3.zero;
+                meleeArea.enabled = false;
+                
+                yield return new WaitForSeconds(2f);
+                break;
+
+            case Type.C:
+                yield return new WaitForSeconds(0.5f);
+                GameObject instantBullet = Instantiate(bullet, transform.position, transform.rotation);
+                Rigidbody rigidBullet = instantBullet.GetComponent<Rigidbody>();
+                rigidBullet.velocity = transform.forward * 20;
+
+                yield return new WaitForSeconds(2f);
+                break;
+        }
+
+        
 
    
 
@@ -125,17 +178,23 @@ public class Enemy : MonoBehaviour
 
     IEnumerator OnDamage(Vector3 reactVec) //피격로직 (로직을 담을 코르틴 생성
     {
-        mat.color = Color.red; //색깔 입히는 코드 ★
+        foreach (MeshRenderer mesh in meshs)
+            mesh.material.color = Color.red; //색깔 입히는 코드 ★
+       
         yield return new WaitForSeconds(0.1f); //시간 정하는 코드
 
         if(curHealth > 0)
         {
-            mat.color = Color.white; //아직죽지 않았을시 색상 하얀색
+            foreach (MeshRenderer mesh in meshs)
+                mesh.material.color = Color.white; //아직죽지 않았을시 색상 하얀색 색깔 입히는 코드 ★
         }
         else
         {
-            mat.color = Color.gray; //죽으면 회색으로 변경
+            foreach (MeshRenderer mesh in meshs)
+                mesh.material.color = Color.gray; //죽으면 회색으로 변경 색깔 입히는 코드 ★
+
             gameObject.layer = 14; //레이어 그대로 14번 (더이상 물리 충돌 하지 않고)
+            isDead = true;
             isChase = false;
             nav.enabled = false;
             anim.SetTrigger("doDie"); //적이 죽는 시점에서도 애니메이션과 플래그 셋팅
@@ -147,7 +206,8 @@ public class Enemy : MonoBehaviour
 
             rigid.AddForce(reactVec * 5, ForceMode.Impulse); //함수로 넉백 구현하기 (뒷쪽으로 힘이 가해진다)
 
-            Destroy(gameObject, 2f); //죽었을시 2초뒤 파괴됨 
+            if (enemyType != Type.D)
+                Destroy(gameObject, 2f); //죽었을시 2초뒤 파괴됨 
         }
     }
 

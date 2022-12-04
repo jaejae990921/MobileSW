@@ -333,12 +333,18 @@ public class Player : MonoBehaviour
             {
                 Bullet enemyBullet = other.GetComponent<Bullet>();
                 health -= enemyBullet.damage; //bullet 스크립트 재활용하여 데미지 적용
-                StartCoroutine(OnDamage()); //코르틴 적용.
+
+                bool isBossAtk = other.name == "Boss Melee Area";
+                StartCoroutine(OnDamage(isBossAtk)); //코르틴 적용.
+            }
+            if (other.GetComponent<Rigidbody>() != null)  //미사일 공격시 맞으면 사라짐
+            {
+                Destroy(other.gameObject);
             }
         }
     }
 
-    IEnumerator OnDamage() //리액션을 위한 코루틴 생성 및 호출
+    IEnumerator OnDamage(bool isBossAtk) //리액션을 위한 코루틴 생성 및 호출
     {
         isDamage = true;
 
@@ -346,6 +352,9 @@ public class Player : MonoBehaviour
         {
             mesh.material.color = Color.yellow;
         }
+
+        if (isBossAtk)
+            rigid.AddForce(transform.forward * -25, ForceMode.Impulse); //피격 코루틴에서 넉백을 addforce()로 구현
 
         yield return new WaitForSeconds(1f); //무적타임 조정
 
@@ -355,6 +364,10 @@ public class Player : MonoBehaviour
         {
             mesh.material.color = Color.white;
         }
+
+        if (isBossAtk)
+            rigid.velocity = Vector3.zero;
+
     }
 
 
