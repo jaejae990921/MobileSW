@@ -27,12 +27,16 @@ public class Player : MonoBehaviour
     bool jDodge; // 회피
     bool isDodge; // 회피 여부
     bool isSwap; // 스왑 여부
+    bool isFireReady = true; // 공격 준비
+
     bool sDown1; // 1번 버튼
     bool sDown2; // 2번 버튼
+    bool fDown; // 공격 입력
 
     GameObject nearObject; // 트리거된 아이템을 저장
-    GameObject equipWeapon; // 손에 들고있는 무기 저장
+    Weapon equipWeapon; // 손에 들고있는 무기 저장
     int equipWeaponIndex = -1;// 손에 들고있는 무기의 인덱스
+    float fireDelay; // 공격 딜레이
 
     void Awake()
     {
@@ -46,6 +50,7 @@ public class Player : MonoBehaviour
         GetInput(); // 입력
         Move(); // 이동
         Turn(); // 회전
+        Attack();
         Dodge(); // 회피
         Swap(); // 무기교체
         Interaction(); // 무기획득
@@ -58,7 +63,8 @@ public class Player : MonoBehaviour
 
         hAxis = Input.GetAxisRaw("Horizontal"); // x축 키보드
         vAxis = Input.GetAxisRaw("Vertical"); // y축 키보드
-
+        
+        fDown = Input.GetButtonDown("Fire1");
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
     }
@@ -70,10 +76,12 @@ public class Player : MonoBehaviour
             moveVec = dodgeVec; // 이동방향을 회피방향으로 고정
         }
 
-        if (isSwap)
+        if (isSwap || !isFireReady) // 무기 스왑이거나 공격중이면 가만히
         {
             moveVec = Vector3.zero;
         }
+
+
         transform.position += moveVec * speed * Time.deltaTime; // 이동속도
         
         anim.SetBool("isRun", moveVec != Vector3.zero); // 가만히 있는 상태가 아니면 isRun이 되게 함
@@ -81,6 +89,21 @@ public class Player : MonoBehaviour
 
     void Turn() { // 회전구현
         transform.LookAt(transform.position + moveVec); // lookat : 지정된 vector 값으로 회전시켜주는 함수
+    }
+
+    void Attack()
+    {
+        if (equipWeapon == null) return; // 손에 든 무기가 없으면 리턴
+
+        fireDelay += Time.deltaTime; // 공격딜레이에 시간을 더해주고 공격가능 여부 확인
+        isFireReady = equipWeapon.rate < fireDelay; 
+
+        if(fDown && isFireReady && !isDodge && !isSwap) // 공격버튼 눌렀을때, 공격가능할때, 회피나 스왑중이 아닐때
+        {
+            equipWeapon.Use(); // 무기 Use() 함수 사용
+            anim.SetTrigger("doSwing");
+            fireDelay = 0; // 공격 딜레이를 0으로 돌려서 다음 공격까지 기다리도록 작성
+        }
     }
 
     void Dodge() { // 회피구현
@@ -112,11 +135,11 @@ public class Player : MonoBehaviour
         {
             if(equipWeapon != null) // 손에 뭘 들고있는 상태라면
             {
-                equipWeapon.SetActive(false); // 원래 들고있던 무기를 안보이게 설정
+                equipWeapon.gameObject.SetActive(false); // 원래 들고있던 무기를 안보이게 설정
             }
             equipWeaponIndex = weaponIndex; // 손에들고있는 무기 인덱스를 입력받은 무기의 인덱스로
-            equipWeapon = weapons[weaponIndex]; // 버튼 누른 무기를 손에 들고있는 무기로 설정
-            equipWeapon.SetActive(true); // 손에 들고 있는 무기를 보이게 설정
+            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>(); // 버튼 누른 무기를 손에 들고있는 무기로 설정
+            equipWeapon.gameObject.SetActive(true); // 손에 들고 있는 무기를 보이게 설정
 
             anim.SetTrigger("doSwap");
 
