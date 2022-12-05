@@ -9,9 +9,9 @@ public class Player : MonoBehaviour
 
     public GameObject[] weapons; // 무기 배열
     public bool[] hasWeapons; // 무기를 가졌는지 bool 배열
-
-    public int ammo; // 총알
-    public int maxAmmo; // 최대총알
+    
+    public int ammo; // 갖고 있는 총알
+    public int maxAmmo; // 최대로 갖고 있을 수 있는 총알 크기
     public int health; // 체력
     public int maxHealth; // 최대체력
 
@@ -28,10 +28,12 @@ public class Player : MonoBehaviour
     bool isDodge; // 회피 여부
     bool isSwap; // 스왑 여부
     bool isFireReady = true; // 공격 준비
+    bool isReload; // 장전 여부
 
     bool sDown1; // 1번 버튼
     bool sDown2; // 2번 버튼
     bool fDown; // 공격 입력
+    bool rDown; // 장전 입력
 
     GameObject nearObject; // 트리거된 아이템을 저장
     Weapon equipWeapon; // 손에 들고있는 무기 저장
@@ -50,7 +52,8 @@ public class Player : MonoBehaviour
         GetInput(); // 입력
         Move(); // 이동
         Turn(); // 회전
-        Attack();
+        Attack(); // 공격
+        Reload(); // 장전
         Dodge(); // 회피
         Swap(); // 무기교체
         Interaction(); // 무기획득
@@ -65,6 +68,7 @@ public class Player : MonoBehaviour
         vAxis = Input.GetAxisRaw("Vertical"); // y축 키보드
         
         fDown = Input.GetButton("Fire1");
+        rDown = Input.GetButtonDown("Reload");
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
     }
@@ -76,7 +80,7 @@ public class Player : MonoBehaviour
             moveVec = dodgeVec; // 이동방향을 회피방향으로 고정
         }
 
-        if (isSwap || !isFireReady) // 무기 스왑이거나 공격중이면 가만히
+        if (isSwap || !isFireReady || isReload) // 무기 스왑중, 총쏘는중, 장전중일때 가만히
         {
             moveVec = Vector3.zero;
         }
@@ -91,7 +95,7 @@ public class Player : MonoBehaviour
         transform.LookAt(transform.position + moveVec); // lookat : 지정된 vector 값으로 회전시켜주는 함수
     }
 
-    void Attack()
+    void Attack() // 공격구현
     {
         if (equipWeapon == null) return; // 손에 든 무기가 없으면 리턴
 
@@ -104,6 +108,31 @@ public class Player : MonoBehaviour
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot"); // 근접무기면 doSwing 아니면 doShot
             fireDelay = 0; // 공격 딜레이를 0으로 돌려서 다음 공격까지 기다리도록 작성
         }
+    }
+
+    void Reload() // 장전 구현
+    {
+        if (equipWeapon == null) return; // 손에 무기가 없으면 리턴
+        if (equipWeapon.type == Weapon.Type.Melee) return; // 무기가 근접무기면 리턴
+        if (ammo == 0) return; // 총알이 없으면 리턴
+        if (equipWeapon.curAmmo == equipWeapon.maxAmmo) return; // 총알이 이미 꽉 차있으면 리턴
+
+        if(rDown && !isDodge && !isSwap && isFireReady) // r 눌렀을 때, 회피중이 아닐때, 무기교체중이 아닐때, 공격중이 아닐때
+        {
+            anim.SetTrigger("doReload");
+            isReload = true;
+
+            Invoke("ReloadOut", 3);
+        }
+    }
+
+    void ReloadOut() // 장전 끝
+    {
+        equipWeapon.curAmmo = maxAmmo; // 
+        //int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
+        //equipWeapon.curAmmo = reAmmo;
+        //ammo -= reAmmo; // 장전한 만큼 탄약개수에서 마이너스 해줌
+        isReload = false;
     }
 
     void Dodge() { // 회피구현
@@ -166,6 +195,16 @@ public class Player : MonoBehaviour
                 Destroy(nearObject); // 먹은 무기를 사라지게함
             }
         }
+    }
+
+    void FreezeRotation() // 회전력 고정
+    {
+        rigid.angularVelocity = Vector3.zero; // rigidbody 회전력을 0으로 고정
+    }
+
+    void FixedUpdate() // 프레임마다 회전력 고정
+    {
+        FreezeRotation();
     }
 
     void OnTriggerStay(Collider other) { // 트리거 이벤트

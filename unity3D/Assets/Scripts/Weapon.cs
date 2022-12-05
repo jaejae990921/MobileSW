@@ -28,7 +28,7 @@ public class Weapon : MonoBehaviour
         else if (type == Type.Range && curAmmo > 0) // 무기타입 Range이면서 탄약이 0보다 클 때
         {
             curAmmo--; // 탄약 -1
-            StartCoroutine("Shot");
+            StartCoroutine("Shot"); // Shot 코루틴 시작
         }
     }
 
