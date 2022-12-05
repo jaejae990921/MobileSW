@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         hAxis = Input.GetAxisRaw("Horizontal"); // x축 키보드
         vAxis = Input.GetAxisRaw("Vertical"); // y축 키보드
         
-        fDown = Input.GetButtonDown("Fire1");
+        fDown = Input.GetButton("Fire1");
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
     }
@@ -101,7 +101,7 @@ public class Player : MonoBehaviour
         if(fDown && isFireReady && !isDodge && !isSwap) // 공격버튼 눌렀을때, 공격가능할때, 회피나 스왑중이 아닐때
         {
             equipWeapon.Use(); // 무기 Use() 함수 사용
-            anim.SetTrigger("doSwing");
+            anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot"); // 근접무기면 doSwing 아니면 doShot
             fireDelay = 0; // 공격 딜레이를 0으로 돌려서 다음 공격까지 기다리도록 작성
         }
     }

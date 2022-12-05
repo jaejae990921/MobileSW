@@ -370,6 +370,7 @@
 "Assets/Joystick Pack/Scripts/Joysticks/FloatingJoystick.cs"
 "Assets/Joystick Pack/Scripts/Joysticks/VariableJoystick.cs"
 "Assets/QuarterView 3D Action BE5/ReadMe/Scripts/ReadmeBE5.cs"
+"Assets/Scripts/Bullet.cs"
 "Assets/Scripts/CameraFollow.cs"
 "Assets/Scripts/Item.cs"
 "Assets/Scripts/Player.cs"
