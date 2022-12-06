@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     bool isDodge; // 회피 여부
     bool isSwap; // 스왑 여부
     bool isFireReady = true; // 공격 준비
-    bool isReload; // 장전 여부
+    bool isReload = false; // 장전 여부 ★★★
 
     bool sDown1; // 1번 버튼
     bool sDown2; // 2번 버튼
@@ -97,6 +97,7 @@ public class Player : MonoBehaviour
 
     void Attack() // 공격구현
     {
+        if (equipWeapon != null && equipWeapon.curAmmo == 0) return; // 총알 없으면 리턴 ★★★
         if (equipWeapon == null) return; // 손에 든 무기가 없으면 리턴
 
         fireDelay += Time.deltaTime; // 공격딜레이에 시간을 더해주고 공격가능 여부 확인
@@ -114,21 +115,21 @@ public class Player : MonoBehaviour
     {
         if (equipWeapon == null) return; // 손에 무기가 없으면 리턴
         if (equipWeapon.type == Weapon.Type.Melee) return; // 무기가 근접무기면 리턴
-        if (ammo == 0) return; // 총알이 없으면 리턴
+        // if (ammo == 0) return; // 총알이 없으면 리턴
         if (equipWeapon.curAmmo == equipWeapon.maxAmmo) return; // 총알이 이미 꽉 차있으면 리턴
 
-        if(rDown && !isDodge && !isSwap && isFireReady) // r 눌렀을 때, 회피중이 아닐때, 무기교체중이 아닐때, 공격중이 아닐때
+        if(rDown && !isDodge && !isSwap && isFireReady && !isReload) // r 눌렀을 때, 회피중이 아닐때, 무기교체중이 아닐때, 공격중이 아닐때
         {
             anim.SetTrigger("doReload");
             isReload = true;
 
-            Invoke("ReloadOut", 3);
+            Invoke("ReloadOut", 1.6f);
         }
     }
 
     void ReloadOut() // 장전 끝
     {
-        equipWeapon.curAmmo = maxAmmo; // 
+        equipWeapon.curAmmo = maxAmmo; // 장전하면 그냥 최대 탄창만큼 충전 ★★★
         //int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
         //equipWeapon.curAmmo = reAmmo;
         //ammo -= reAmmo; // 장전한 만큼 탄약개수에서 마이너스 해줌
