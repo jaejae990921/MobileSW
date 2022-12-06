@@ -13,11 +13,13 @@ public class Player : MonoBehaviour
     public Camera followCamera; //플레이어에 메인카메라 변수 만듬
 
 
+
+
+
     //아이템 변수 선언
     public int ammo; //탄약
-    public int coin; //동전
     public int health; //체력
-
+    public int score; //점수
 
     //각 수치의 최대값을 저장할 변수 생성
     public int maxAmmo;
@@ -44,7 +46,7 @@ public class Player : MonoBehaviour
     bool isFireReady = true; //공격준비
     bool isBorder; //벽 충돌 플레그 변수
     bool isDamage; //무적 타임
-    bool isShop;
+    public bool isShop;
 
     Vector3 moveVec;
     Vector3 dodgeVec;
@@ -56,7 +58,7 @@ public class Player : MonoBehaviour
 
 
     GameObject nearObject; //트리거 된 아이템을 저장하기 위한 변수 선언
-    Weapon equipWeapon; //기존에 장착된 무기를 저장하는 변수를 선언, 활용
+    public Weapon equipWeapon; //기존에 장착된 무기를 저장하는 변수를 선언, 활용
     int equipWeaponIndex = -1;
     float fireDelay; //공격딜레이
 
@@ -65,6 +67,10 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>(); //위쪽에 있기 때문에 inchildren 안해도됨
         anim = GetComponentInChildren<Animator>();
         meshs = GetComponentsInChildren<MeshRenderer>();
+
+        // 
+        Debug.Log(PlayerPrefs.GetInt("MaxScore"));
+       // PlayerPrefs.SetInt("MaxScore", 12050);
     }
 
 
@@ -315,11 +321,6 @@ public class Player : MonoBehaviour
                     ammo += item.value; //enum 타입에 맞게 아이템 수치를 플레이어 수치에 적용하기
                     if (ammo > maxAmmo)
                         ammo = maxAmmo;
-                    break;
-                case Item.Type.Coin:
-                    coin += item.value; //enum 타입에 맞게 아이템 수치를 플레이어 수치에 적용하기
-                    if (coin > maxCoin)
-                        coin = maxCoin;
                     break;
                 case Item.Type.Heart:
                     health += item.value; //enum 타입에 맞게 아이템 수치를 플레이어 수치에 적용하기
