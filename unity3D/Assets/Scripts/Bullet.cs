@@ -12,7 +12,11 @@ public class Bullet : MonoBehaviour
         {
             Destroy(gameObject, 0.5f); // 0.5초 뒤에 사라짐
         }
-        else if (collision.gameObject.tag == "Wall") // 총알 벽에 닿으면
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Wall") // 총알 벽에 닿으면
         {
             Destroy(gameObject); // 바로 삭제
         }

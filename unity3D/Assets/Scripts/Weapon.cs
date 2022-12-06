@@ -34,11 +34,11 @@ public class Weapon : MonoBehaviour
 
     IEnumerator Swing() // 열거형 함수 클래스
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.4f);
         meleeArea.enabled = true; // 박스콜라이더 활성화
         trailEffect.enabled = true; // 이팩트 활성화
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
         meleeArea.enabled = false;
 
         yield return new WaitForSeconds(0.3f);

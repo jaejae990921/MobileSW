@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     bool isSwap; // 스왑 여부
     bool isFireReady = true; // 공격 준비
     bool isReload = false; // 장전 여부 ★★★
+    bool isBorder; // 벽 충돌 여부
 
     bool sDown1; // 1번 버튼
     bool sDown2; // 2번 버튼
@@ -85,8 +86,10 @@ public class Player : MonoBehaviour
             moveVec = Vector3.zero;
         }
 
-
-        transform.position += moveVec * speed * Time.deltaTime; // 이동속도
+        if (!isBorder)
+        {
+            transform.position += moveVec * speed * Time.deltaTime; // 이동속도
+        }
         
         anim.SetBool("isRun", moveVec != Vector3.zero); // 가만히 있는 상태가 아니면 isRun이 되게 함
     }
@@ -97,7 +100,6 @@ public class Player : MonoBehaviour
 
     void Attack() // 공격구현
     {
-        if (equipWeapon != null && equipWeapon.curAmmo == 0) return; // 총알 없으면 리턴 ★★★
         if (equipWeapon == null) return; // 손에 든 무기가 없으면 리턴
 
         fireDelay += Time.deltaTime; // 공격딜레이에 시간을 더해주고 공격가능 여부 확인
@@ -105,6 +107,7 @@ public class Player : MonoBehaviour
 
         if(fDown && isFireReady && !isDodge && !isSwap) // 공격버튼 눌렀을때, 공격가능할때, 회피나 스왑중이 아닐때
         {
+            if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return; // 총알 없으면 리턴 ★★★
             equipWeapon.Use(); // 무기 Use() 함수 사용
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot"); // 근접무기면 doSwing 아니면 doShot
             fireDelay = 0; // 공격 딜레이를 0으로 돌려서 다음 공격까지 기다리도록 작성
@@ -203,9 +206,16 @@ public class Player : MonoBehaviour
         rigid.angularVelocity = Vector3.zero; // rigidbody 회전력을 0으로 고정
     }
 
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green); // 레이를 쏘는 함수 // 시작위치, 방향및길이, 색깔
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall")); // 출발, 방향, 길이, Wall에 닿으면 isBorder가 true로 바뀜
+    }
+
     void FixedUpdate() // 프레임마다 회전력 고정
     {
         FreezeRotation();
+        StopToWall();
     }
 
     void OnTriggerStay(Collider other) { // 트리거 이벤트
