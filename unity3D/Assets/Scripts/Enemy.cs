@@ -8,11 +8,13 @@ public class Enemy : MonoBehaviour
     public int MaxHealth; // 몬스터 최대 체력
     public int curHealth; // 몬스터 현재 체력
     public Transform target; // 따라갈 타겟
+    public bool isChase; // 추적 여부
 
     Rigidbody rigid; // 리지드 바디
     BoxCollider boxCollider; // 박스 콜라이더
     Material mat; // 재질
     NavMeshAgent nav; // NavAgent가 경로를 그리기 위한 바탕
+    Animator anim; // 애니메이터
 
     private void Awake()
     {
@@ -20,17 +22,32 @@ public class Enemy : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>(); // 박스콜라이더 초기화
         mat = GetComponentInChildren<MeshRenderer>().material; // material은 MeshRenderer에서 가져옴
         nav = GetComponent<NavMeshAgent>(); // 네비게이션 초기화
+        anim = GetComponentInChildren<Animator>(); // 애니메이터 초기화
+
+        Invoke("ChaseStart", 2); // 2초 뒤에 CahseStart 함수 시작
+    }
+
+    void ChaseStart() // 추적 시작 함수
+    {
+        isChase = true; // 추적 여부 트루
+        anim.SetBool("isWalk", true); // 애니메이션 isWalk 값 true로
     }
 
     void Update()
     {
-        nav.SetDestination(target.position); // 도착할 목표 위치 지정해주는 함수 -> 타겟의 위치로 설정
+        if(isChase) // 2초뒤에 추적 시작하게 되면, 목표위치 지정 해주는 함수
+        {
+            nav.SetDestination(target.position); // 도착할 목표 위치 지정해주는 함수 -> 타겟의 위치로 설정
+        }
     }
 
     void FreezeVelocity() // 속도, 회전력 고정
     {
-        rigid.velocity = Vector3.zero; // 속도 고정
-        rigid.angularVelocity = Vector3.zero; // rigidbody 회전력을 0으로 고정
+        if(isChase)
+        {
+            rigid.velocity = Vector3.zero; // 속도 고정
+            rigid.angularVelocity = Vector3.zero; // rigidbody 회전력을 0으로 고정
+        }
     }
 
     void FixedUpdate() // 프레임마다 속도, 회전력 고정
@@ -70,6 +87,10 @@ public class Enemy : MonoBehaviour
             {
                 mat.color = Color.gray; // 죽으면 회색으로
                 gameObject.layer = 14; // 죽으면 레이어 14번으로 -> EnemyDead
+                isChase = false; // 추적 그만
+                nav.enabled = false; // 사망 리액션을 위해 navAgent 비활성
+
+                anim.SetTrigger("doDie"); // doDie 애니메이션 실행
 
                 reactVec = reactVec.normalized; // 1로 노멀라이즈드
                 reactVec += Vector3.up; // 위쪽으로
