@@ -29,7 +29,7 @@ public class BossRock : Bullet
         while (!isShoot) //쏘는 상황이 아닌경우
         {
             angularPower += 0.02f;
-            scaleValue += 0.0005f;
+            scaleValue += 0.001f;
             transform.localScale = Vector3.one * scaleValue; //while문에서 증가된 값을 트랜스폼, 리지드 바디에 적용
             rigid.AddTorque(transform.right * angularPower, ForceMode.Acceleration);
             yield return null; //while문에 꼭 적어야 하는 코드
