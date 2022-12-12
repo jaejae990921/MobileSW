@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
             else
             {
                 mat.color = Color.gray; // 죽으면 회색으로
-                gameObject.layer = 14; // 죽으면 레이어 14번으로 -> EnemyDead
+                gameObject.layer = 12; // 죽으면 레이어 14번으로 -> EnemyDead
                 isChase = false; // 추적 그만
                 nav.enabled = false; // 사망 리액션을 위해 navAgent 비활성
 

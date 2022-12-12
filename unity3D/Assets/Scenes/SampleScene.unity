@@ -183,7 +183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 79467117}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 2.5, z: 1.8}
+  m_LocalPosition: {x: 0.8, y: 3.3, z: 1.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1008,9 +1008,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae76e0db9d1cc7a49b29809c6f8a43a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 50
-  curHealth: 50
+  MaxHealth: 100
+  curHealth: 100
   target: {fileID: 1282425251}
+  isChase: 0
 --- !u!65 &1146930777
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1288,7 +1289,7 @@ PrefabInstance:
     - target: {fileID: 2929252283123773939, guid: aaa2c939c0359ac4dbce3f49e8b90252,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
@@ -1631,8 +1632,8 @@ MonoBehaviour:
   type: 1
   damage: 0
   rate: 0.15
-  maxAmmo: 30
-  curAmmo: 30
+  maxAmmo: 5
+  curAmmo: 5
   meleeArea: {fileID: 0}
   trailEffect: {fileID: 0}
   bulletPos: {fileID: 79467118}
@@ -1848,7 +1849,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -2196,7 +2197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   damage: 25
-  rate: 0.5
+  rate: 0.6
   maxAmmo: 0
   curAmmo: 0
   meleeArea: {fileID: 2057683025}
