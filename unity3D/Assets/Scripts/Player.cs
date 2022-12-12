@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
     bool isFireReady = true; // 공격 준비
     bool isReload = false; // 장전 여부 ★★★
     bool isBorder; // 벽 충돌 여부
+    bool isShot;
 
     bool sDown1; // 1번 버튼
     bool sDown2; // 2번 버튼
@@ -57,7 +58,7 @@ public class Player : MonoBehaviour
         Move(); // 이동
         Turn(); // 회전
         Attack(); // 공격
-        Reload(); // 장전
+        //Reload(); // 장전
         Dodge(); // 회피
         Swap(); // 무기교체
         Interaction(); // 무기획득
@@ -104,13 +105,21 @@ public class Player : MonoBehaviour
     void Attack() // 공격구현
     {
         if (equipWeapon == null) return; // 손에 든 무기가 없으면 리턴
+        if (isReload) return;
 
         fireDelay += Time.deltaTime; // 공격딜레이에 시간을 더해주고 공격가능 여부 확인
         isFireReady = equipWeapon.rate < fireDelay; 
 
         if(fDown && isFireReady && !isDodge && !isSwap) // 공격버튼 눌렀을때, 공격가능할때, 회피나 스왑중이 아닐때
         {
-            if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return; // 총알 없으면 장전 ★★★
+            if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0)
+            {
+                Reload();
+                //isReload = true;
+                //anim.SetTrigger("doReload");
+
+                //Invoke("ReloadOut", 1.6f);
+            }// 총알 없으면 장전 ★★★
             if (isSwing) return; // 스윙중이면 리턴
 
             if(equipWeapon.type == Weapon.Type.Melee && !isSwing) // 근접무기이면서 스윙중이 아니면
@@ -140,13 +149,14 @@ public class Player : MonoBehaviour
     {
         if (equipWeapon == null) return; // 손에 무기가 없으면 리턴
         if (equipWeapon.type == Weapon.Type.Melee) return; // 무기가 근접무기면 리턴
-        // if (ammo == 0) return; // 총알이 없으면 리턴
+
         if (equipWeapon.curAmmo == equipWeapon.maxAmmo) return; // 총알이 이미 꽉 차있으면 리턴
 
-        if(rDown && !isDodge && !isSwap && isFireReady && !isReload) // r 눌렀을 때, 회피중이 아닐때, 무기교체중이 아닐때, 공격중이 아닐때
+        if(!isDodge && !isSwap && isFireReady && !isReload) // r 눌렀을 때, 회피중이 아닐때, 무기교체중이 아닐때, 공격중이 아닐때
         {
-            anim.SetTrigger("doReload");
             isReload = true;
+            anim.SetTrigger("doReload");
+            //isReload = true;
 
             Invoke("ReloadOut", 1.6f);
         }
