@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7071725457804310630}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -78,14 +78,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 2
-  maxHealth: 200
-  curHealth: 200
+  maxHealth: 70
+  curHealth: 70
+  score: 300
+  manager: {fileID: 0}
   target: {fileID: 0}
   meleeArea: {fileID: 0}
   bullet: {fileID: 9109381404358096347, guid: 237109a5961c89d4fa03a90d7cd0bce6, type: 3}
   isChase: 0
   isAttack: 0
   isDead: 0
+  isDamage: 0
   rigid: {fileID: 0}
   boxCollider: {fileID: 0}
   meshs: []

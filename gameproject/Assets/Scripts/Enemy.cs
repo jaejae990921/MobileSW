@@ -9,13 +9,16 @@ public class Enemy : MonoBehaviour
     public Type enemyType;
     public int maxHealth; //체력과 컴포넌스를 담을 변수 선언
     public int curHealth;
+    public int score;
+    public GameManager manager;
+
     public Transform target; //목표가 될 변수
     public BoxCollider meleeArea; //콜라이더를 담을 변수 추가
     public GameObject bullet;
     public bool isChase;
     public bool isAttack;
     public bool isDead;
-
+    public bool isDamage;
 
     public Rigidbody rigid;
     public BoxCollider boxCollider;
@@ -62,6 +65,7 @@ public class Enemy : MonoBehaviour
     }
     void Targetting()
     { 
+
         if(!isDead && enemyType != Type.D)
         {
 
@@ -91,14 +95,17 @@ public class Enemy : MonoBehaviour
                 targetRadius,
                 transform.forward, targetRange, LayerMask.GetMask("Player"));
 
-            if (rayHits.Length > 0 && !isAttack) //rayHit 변수에 데이터가 들어오면 공격 코르틴 실행
+            if (rayHits.Length > 0 && !isAttack && !isDead) //rayHit 변수에 데이터가 들어오면 공격 코르틴 실행
             {
+
                 StartCoroutine(Attack());
             }
         }
     }
     IEnumerator Attack() //몬스터 공격
     {
+       
+
         isChase = false; //몬스터가 정지함
         isAttack = true; //몬스터가 공격함
         anim.SetBool("isAttack", true); //공격 애니메이션 적용
@@ -109,7 +116,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(0.2f); //애니메이션 작동을 위한 딜레이를 줌
                 meleeArea.enabled = true;
 
-                yield return new WaitForSeconds(1f); //애니메이션 작동을 위한 딜레이를 줌
+                yield return new WaitForSeconds(0.5f); //애니메이션 작동을 위한 딜레이를 줌
                 meleeArea.enabled = false;
                 break;
 
@@ -155,60 +162,149 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter(Collider other) //날아오는 총알, 해머
     {
-        if(other.tag == "Melee") //근접무기 공격 맞을때
+        
+        // 근접무기의 collider의 OnTriggerEnter이 2번 실행되는 버그가 있어 수정
+        // isDamage 변수를 통해 첫번쨰 공격이후 근접 무기의 모션이 끝난 뒤 다시 실행될수 있도록 수정
+        if (other.tag == "Melee") //근접무기 공격 맞을때
         {
+            if(isDamage) { return; } // 데미지가 들어가는 중이면 실행 안됨
+            isDamage = true;        // 데미지가 false면 true로 바꿔주고 나머지 공격 실행
             Weapon weapon = other.GetComponent<Weapon>(); //충돌 상대의 스크립트를 가져와 damage값을 체력에 적용
             curHealth -= weapon.damage;
             Vector3 reactVec = transform.position - other.transform.position;
 
-            StartCoroutine(OnDamage(reactVec));
+            StartCoroutine(meleeOnDamage(reactVec));
+
         }
         else if (other.tag == "Bullet") //원거리 공격 맞을때
         {
+            
+
             Bullet bullet = other.GetComponent<Bullet>(); //충돌 상대의 스크립트를 가져와 damage값을 체력에 적용
             curHealth -= bullet.damage;
             Vector3 reactVec = transform.position - other.transform.position;
             Destroy(other.gameObject); //총알의 경우 적과 닿았을때 삭제 되도록 코드
 
 
-            StartCoroutine(OnDamage(reactVec));
+            StartCoroutine(rangeOnDamage(reactVec));
         }
         
     }
 
-    IEnumerator OnDamage(Vector3 reactVec) //피격로직 (로직을 담을 코르틴 생성
+    IEnumerator meleeOnDamage(Vector3 reactVec) //피격로직 로직을 담을 코르틴 생성
     {
         foreach (MeshRenderer mesh in meshs)
             mesh.material.color = Color.red; //색깔 입히는 코드 ★
-       
+
         yield return new WaitForSeconds(0.1f); //시간 정하는 코드
 
-        if(curHealth > 0)
+        if (curHealth > 0 && !isDead)
         {
             foreach (MeshRenderer mesh in meshs)
                 mesh.material.color = Color.white; //아직죽지 않았을시 색상 하얀색 색깔 입히는 코드 ★
+
         }
         else
         {
+            isDead = true;
             foreach (MeshRenderer mesh in meshs)
                 mesh.material.color = Color.gray; //죽으면 회색으로 변경 색깔 입히는 코드 ★
 
             gameObject.layer = 14; //레이어 그대로 14번 (더이상 물리 충돌 하지 않고)
-            isDead = true;
             isChase = false;
             nav.enabled = false;
             anim.SetTrigger("doDie"); //적이 죽는 시점에서도 애니메이션과 플래그 셋팅
+            Player player = target.GetComponent<Player>();
+            player.score += score;
+
+            switch (enemyType)
+            {
+
+                case Type.A:
+                    manager.enemyCntA--;
+                    break;
+                case Type.B:
+                    manager.enemyCntB--;
+                    break;
+                case Type.C:
+                    manager.enemyCntC--;
+                    break;
+                case Type.D:
+                    manager.enemyCntD--;
+                    break;
 
 
+            }
 
             reactVec = reactVec.normalized; //리엑션을 위해 vector을 선언
             reactVec += Vector3.up;
 
             rigid.AddForce(reactVec * 5, ForceMode.Impulse); //함수로 넉백 구현하기 (뒷쪽으로 힘이 가해진다)
 
-            if (enemyType != Type.D)
-                Destroy(gameObject, 2f); //죽었을시 2초뒤 파괴됨 
+            Destroy(gameObject, 2f); //죽었을시 2초뒤 파괴됨 
+
         }
+
+        yield return new WaitForSeconds(0.4f);
+        isDamage= false; 
+    }
+
+    IEnumerator rangeOnDamage(Vector3 reactVec) //피격로직 로직을 담을 코르틴 생성
+    {
+        foreach (MeshRenderer mesh in meshs)
+            mesh.material.color = Color.red; //색깔 입히는 코드 ★
+
+        yield return new WaitForSeconds(0.1f); //시간 정하는 코드
+
+        if (curHealth > 0 && !isDead)
+        {
+            foreach (MeshRenderer mesh in meshs)
+                mesh.material.color = Color.white; //아직죽지 않았을시 색상 하얀색 색깔 입히는 코드 ★
+
+        }
+        else
+        {
+            isDead = true;
+            foreach (MeshRenderer mesh in meshs)
+                mesh.material.color = Color.gray; //죽으면 회색으로 변경 색깔 입히는 코드 ★
+
+            gameObject.layer = 14; //레이어 그대로 14번 (더이상 물리 충돌 하지 않고)
+            isChase = false;
+            nav.enabled = false;
+            anim.SetTrigger("doDie"); //적이 죽는 시점에서도 애니메이션과 플래그 셋팅
+            Player player = target.GetComponent<Player>();
+            player.score += score;
+
+            switch (enemyType)
+            {
+
+                case Type.A:
+                    manager.enemyCntA--;
+                    break;
+                case Type.B:
+                    manager.enemyCntB--;
+                    break;
+                case Type.C:
+                    manager.enemyCntC--;
+                    break;
+                case Type.D:
+                    manager.enemyCntD--;
+                    break;
+
+
+            }
+
+            reactVec = reactVec.normalized; //리엑션을 위해 vector을 선언
+            reactVec += Vector3.up;
+
+            rigid.AddForce(reactVec * 5, ForceMode.Impulse); //함수로 넉백 구현하기 (뒷쪽으로 힘이 가해진다)
+
+            Destroy(gameObject, 2f); //죽었을시 2초뒤 파괴됨 
+
+        }
+
+        yield return new WaitForSeconds(0.01f);
+        isDamage = false;
     }
 
 }

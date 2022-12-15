@@ -111,10 +111,10 @@ public class Boss : Enemy
         boxCollider.enabled = false;
         anim.SetTrigger("doTaunt");  //애니메이션 적용
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.6f);
         meleeArea.enabled = true;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
         meleeArea.enabled = false;
 
         yield return new WaitForSeconds(1f);
