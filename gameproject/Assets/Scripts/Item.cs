@@ -4,30 +4,30 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum Type { Ammo, Coin, Grenade, Heart, Weapon }; //¿­°ÅÇü Å¸ÀÔ
-    public Type type;
-    public int value;
+    public enum Type { Ammo, Coin, Grenade, Heart, Weapon }; // ì—´ê±°í˜• íƒ€ì…
+    public Type type; // ë¬´ê¸° íƒ€ì…
+    public int value; // í•´ë¨¸ 0, í•¸ë“œê±´ 1, ì„œë¸Œë¨¸ì‹ ê±´ 2
 
 
-    Rigidbody rigid; //¾ÆÀÌÅÛ ¹°¸® Ãæµ¹À» ´ã´çÇÏ´Â Äİ¶óÀÌ´õ¿Í Ãæµ¹ÇÏ¿© ¹®Á¦ ¹ß»ı fix
+    Rigidbody rigid; //ì•„ì´í…œ ë¬¼ë¦¬ ì¶©ëŒì„ ë‹´ë‹¹í•˜ëŠ” ì½œë¼ì´ë”ì™€ ì¶©ëŒí•˜ì—¬ ë¬¸ì œ ë°œìƒ fix
     SphereCollider sphereCollider;
 
     void Awake()
     {
-        rigid = GetComponent<Rigidbody>();
-        sphereCollider = GetComponent<SphereCollider>();
+        rigid = GetComponent<Rigidbody>(); // ì»´í¬ë„ŒíŠ¸ ê°’ìœ¼ë¡œ ë¬¼ë¦¬íš¨ê³¼ ì´ˆê¸°í™”
+        sphereCollider = GetComponent<SphereCollider>(); // ì»´í¬ë„ŒíŠ¸ ê°’ìœ¼ë¡œ ì½œë¼ì´ë” ì´ˆê¸°í™”
     }
 
     void Update()
     {
-        transform.Rotate(Vector3.up * 20 * Time.deltaTime);
+        transform.Rotate(Vector3.up * 20 * Time.deltaTime); // ë¬´ê¸° íšŒì „
     }
 
-    void OnCollisionEnter(Collision collision) //¹°¸®È¿°ú º¯°æ
+    void OnCollisionEnter(Collision collision) // ë¬¼ë¦¬íš¨ê³¼ ë³€ê²½
     {
-        if(collision.gameObject.tag == "Floor") //¹Ù´Ú¿¡ ´êÀ½ Á¶°Ç
+        if(collision.gameObject.tag == "Floor") // ë°”ë‹¥ì— ë‹¿ìŒ ì¡°ê±´
         {
-            rigid.isKinematic = true; //rigidbody´Â ¿ÜºÎ ¹°¸® È¿°ú¿¡ ÀÇÇØ ¿òÁ÷ÀÌÁö ¸øÇÏ°ÔÇÔ.
+            rigid.isKinematic = true; //rigidbodyëŠ” ì™¸ë¶€ ë¬¼ë¦¬ íš¨ê³¼ì— ì˜í•´ ì›€ì§ì´ì§€ ëª»í•˜ê²Œí•¨.
             sphereCollider.enabled = false;
         }
     }
