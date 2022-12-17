@@ -132,15 +132,14 @@ public class Player : MonoBehaviour
 
 
 
-    void Turn()
+    void Turn() // 회전 구현
     {
-        //#1. 키보드에 의한 회전
-        transform.LookAt(transform.position + moveVec); //우리가 나아가는 방향으로 바로 바라본다.
+        transform.LookAt(transform.position + moveVec); // 지정된 벡터값으로 회전시켜주는 함수사용
     }
 
-    public void Attack()
+    public void Attack() // 공격 구현
     {
-        if (equipWeapon == null) //손에 아무것도 없으면
+        if (equipWeapon == null) //손에 무기가 아무것도 없으면 리턴
             return;
 
         else if(equipWeapon.type == Weapon.Type.Melee) // 근접무기일때
@@ -149,20 +148,20 @@ public class Player : MonoBehaviour
             //isFireReady = equipWeapon.meleerate < fireDelay; //공격딜레이에 시간을 더해주고 공격가능 여부를 확인
             
             
-            if (!isSwing && !isDodge && !isSwap && !isShop && !isDead) //공격할때 같이 못누르는 값 설정
+            if (!isSwing && !isDodge && !isSwap && !isShop && !isDead) // 스윙, 회피, 무기교체, 상점이용, 죽음상태가 아닐때
             {
-                isSwing = true;
-                equipWeapon.Use(); //조건이 충족되면 무기에 있는 함수 실행
-                anim.SetTrigger("doSwing"); //무기 타입에 따라 다른 트리거 실행
+                isSwing = true; // 스윙여부 true
+                equipWeapon.Use(); // 무기에 있는 Use 함수 실행
+                anim.SetTrigger("doSwing"); // doSwing 애니메이션 동작
                 //fireDelay = 0; //공격 딜레이를 0으로 돌려서 다음 공격까지 기다리도록 작성
-                Invoke("SwingOut", 0.8f);
+                Invoke("SwingOut", 0.8f); // swingout 함수를 0.8초뒤에 실행
             }
         }
         else // 원거리 무기일때
         {
-            if (equipWeapon.curAmmo == 0) // 총알이 없으면 장전
+            if (equipWeapon.curAmmo == 0) // 총알이 없으면
             {
-                Reload(); 
+                Reload(); // 장정함수 실행
             }
 
             else
@@ -170,63 +169,61 @@ public class Player : MonoBehaviour
                 //fireDelay += Time.deltaTime;
                 //isFireReady = equipWeapon.rate < fireDelay; //공격딜레이에 시간을 더해주고 공격가능 여부를 확인
 
-                if (!isShot && !isDodge && !isSwap && !isShop && !isDead) //공격할때 같이 못누르는 값 설정
+                if (!isShot && !isDodge && !isSwap && !isShop && !isDead) // 공격, 회피, 무기교체, 상점이용, 죽음상태가 아닐때
                 {
-                    isShot = true;
-                    equipWeapon.Use(); //조건이 충족되면 무기에 있는 함수 실행
-                    anim.SetTrigger("doShot"); //무기 타입에 따라 다른 트리거 실행
+                    isShot = true; // isShot을 true로 설정
+                    equipWeapon.Use(); // 무기에 있는 Use 함수 실행
+                    anim.SetTrigger("doShot"); // doShot 애니메이션 동작
                     //fireDelay = 0; //공격 딜레이를 0으로 돌려서 다음 공격까지 기다리도록 작성
-                    Invoke("ShotOut", equipWeapon.rate);
+                    Invoke("ShotOut", equipWeapon.rate); // Shotout 함수를 공격속도만큼 뒤에 실행 -> 공격속도가 빠르면 더 일찍 shot 상태를 탈출
                 }
             }
         }
     }
 
-    void ShotOut()
+    void ShotOut() // ShotOut 함수
     {
-        isShot = false;
+        isShot = false; // Shot 여부를 false로
     }
 
-    void SwingOut()
+    void SwingOut() // SwingOut 함수
     {
-        isSwing = false;
+        isSwing = false; // Swing 여부를 false로
     }
 
     void Reload() //장전 함수 구현
     {
-        if (equipWeapon == null) //손에 무기가 없으면 장전이 안
+        if (equipWeapon == null) //손에 무기가 없으면 리턴
             return;
 
-        if (equipWeapon.type == Weapon.Type.Melee) //근접 무기일 경우 장전이 안
+        if (equipWeapon.type == Weapon.Type.Melee) //근접 무기일 경우 리턴
             return;
-
-        //우리는 총알이 없기 때문에 따로 ammo 설정을 안함.
 
         if(!isDodge && !isSwap && isFireReady && !isShop && !isDead) //점프, 회피, 무기 변경때는 장전이 불가.
         {
-            isReload = true;
-            anim.SetTrigger("doReload"); //애니메이터 트리거 호출과 플래그변수 변화 작성
+            isReload = true; // 장전여부를 true로
+            anim.SetTrigger("doReload"); // doReload 애니메이션 시작
             
-            Invoke("ReloadOut", 1.6f); //장전시간 설정 3초 ★
+            Invoke("ReloadOut", 1.6f); // 1.6초 뒤에 ReloadOut 함수 실행
         }
     }
 
-    void ReloadOut()
+    void ReloadOut() // 장전 끝 함수
     {
         //int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
-        equipWeapon.curAmmo = equipWeapon.maxAmmo; //무기는 탄에 들어감
+        equipWeapon.curAmmo = equipWeapon.maxAmmo; // 무기의 현재 탄약을 최대 탄약으로 채워줌
         //ammo -= reAmmo; //플레이어가 소지하고 있는 탄은 사라진다.
-        isReload = false;
+        isReload = false; // 장전 여부를 false로
     }
 
-    public void Dodge()
+    public void Dodge() // 회피함수
     {
         if (moveVec != Vector3.zero && !isDodge && !isSwap && !isShop && !isDead)  // 점프 한계설정 (움직임이 zero가 아닐때 "회피(Dodge)")
         {
-            dodgeVec = moveVec; //무브벡터를 닷지벡터에 대입
-            speed *= 2; //스피드 속도 두배
-            anim.SetTrigger("doDodge");
-            isDodge = true;
+            dodgeVec = moveVec; //무브벡터를 닷지벡터에 대입, 회피중 방향을 못바꾸게함
+            speed *= 2; // 이동 속도 두배
+            anim.SetTrigger("doDodge"); // doDodge 함수 실행
+            isDodge = true; // 회피 여부를 true로
 
             Invoke("DodgeOut", 0.5f); // 닷지할때 0.4초의 시간차(딜레이)를 줌 <바로 닷지 안돼게 방지 코드>
         }
@@ -234,8 +231,8 @@ public class Player : MonoBehaviour
     
     void DodgeOut() //시간차를 줘서 isDodge를 false
     {
-        speed *= 0.5f;
-        isDodge = false;
+        speed *= 0.5f; // 이동속도를 원래 속도로 복귀
+        isDodge = false; // 회피 여부를 false로
     }
 
     public void Swap() //무기 교체 함수
@@ -251,88 +248,88 @@ public class Player : MonoBehaviour
         //if (sDown1) weaponIndex = 0; //1번키 누르면 인덱스 0
         //if (sDown2) weaponIndex = 1; //2번키 누르면 인덱스 1
         //if (sDown3) weaponIndex = 2; //3번키 누르면 인덱스 2
-        if (equipWeapon == null) return;
+        if (equipWeapon == null) return; // 장착한 무기가 없으면 리턴
 
-        if (!hasWeapons[0] || !hasWeapons[2]) return;
+        if (!hasWeapons[0] || !hasWeapons[2]) return; // 해머와 머신건을 갖고있지 않으면 리턴
 
-        if (!isDodge && !isDead)
+        if (!isDodge && !isDead) // 회피중, 죽음상태가 아닐때
         {
-            if (equipWeapon != null)
+            if (equipWeapon != null) // 손에 무기를 들고있으면
             {
-                equipWeapon.gameObject.SetActive(false);
+                equipWeapon.gameObject.SetActive(false); // 손에 든 무기를 안보이게 설정
             }
 
-            if (equipWeapon.type == Weapon.Type.Melee)
+            if (equipWeapon.type == Weapon.Type.Melee) // 현재끼고있는 무기가 근접무기라면
             {
-                equipWeapon = weapons[2].GetComponent<Weapon>();
-                equipWeapon.gameObject.SetActive(true);
+                equipWeapon = weapons[2].GetComponent<Weapon>(); // 서브머신건의 스크립트 가져오기
+                equipWeapon.gameObject.SetActive(true); // 서브머신건을 보이게 설정
 
-                anim.SetTrigger("doSwap"); //애니메이터 셋팅
+                anim.SetTrigger("doSwap"); // 무기교체 애니메이션 실행
 
-                isSwap = true; //교체동안에 아무것도 못하게 함
+                isSwap = true; // 교체 여부를 true로
 
-                Invoke("SwapOut", 0.4f);
+                Invoke("SwapOut", 0.4f); // 교체 끝 함수를 0.4초 뒤에 호출
             }
-            else
+            else // 총을 들고있을 경우
             {
-                equipWeapon = weapons[0].GetComponent<Weapon>();
-                equipWeapon.gameObject.SetActive(true);
+                equipWeapon = weapons[0].GetComponent<Weapon>(); // 해머의 Weapone 스크립트를 가져옴
+                equipWeapon.gameObject.SetActive(true); // 해머를 보이게 설정
 
-                anim.SetTrigger("doSwap"); //애니메이터 셋팅
+                anim.SetTrigger("doSwap"); // 무기교체 애니메이션 실행
 
-                isSwap = true; //교체동안에 아무것도 못하게 함
+                isSwap = true; // 교체 여부를 true로
 
-                Invoke("SwapOut", 0.4f);
+                Invoke("SwapOut", 0.4f); // 교체 끝 함수를 0.4초 뒤에 호출
             }
         }
     }
 
-    void SwapOut() //교체 시간이 끝나고 다시 다른 작업을 할수 있도록 함
+    void SwapOut() // 무기교체 끝 함수
     {
-        isSwap = false;
+        isSwap = false; // 무기 교체 여부를 false로
     }
     
-    void Interation() // e누르면 동작하는거
+    void Interation() // 상호작용 함수
     {
-        if(nearObject != null && !isDodge && !isDead) //플레이어 근처에 물건이 있다, 점프나 회피때 상호작용 못하게 막음.
+        if(nearObject != null && !isDodge && !isDead) // 근처에 오브젝트 존재, 회피중X, 죽음상태X 이면
         {
-            if(nearObject.tag == "Weapon") //무기를 가지고 있다
+            if(nearObject.tag == "Weapon") // 오브젝트의 태그가 Weapon이면
             {
-                Item item = nearObject.GetComponent<Item>();
-                int weaponIndex = item.value;
-                hasWeapons[weaponIndex] = true; //무기 인덱스를 트루로 바꿈
+                Item item = nearObject.GetComponent<Item>(); // 해당 오브젝트의 Item 스크립트 가져옴
+                int weaponIndex = item.value; // 해당 무기의 벨류를 웨폰인덱스로 가져옴
+                hasWeapons[weaponIndex] = true; // 해당 무기를 가졌다고 true로 변경
 
-                Destroy(nearObject); //아이템 정보를 가져와서 해당 무기 입수를 체크
+                Destroy(nearObject); // 습득한 아이템을 씬에서 삭제
             }
 
-            if (!hasWeapons[0] && hasWeapons[2] && equipWeapon == null)
+            if (!hasWeapons[0] && hasWeapons[2] && equipWeapon == null) // 해머습득X, 손에무기X, 서브머신건을 습득했을때
             {
-                equipWeapon = weapons[2].GetComponent<Weapon>();
-                equipWeapon.gameObject.SetActive(true);
+                equipWeapon = weapons[2].GetComponent<Weapon>(); // 서브머신건의 Weapon 스크립트 가져옴
+                equipWeapon.gameObject.SetActive(true); // 서브머신건을 보이게 설정
 
-                anim.SetTrigger("doSwap");
+                anim.SetTrigger("doSwap"); // 무기교체 애니메이션 실행
 
-                isSwap = true;
+                isSwap = true; // 무기교체 여부를 true로
 
-                Invoke("SwapOut", 0.4f);
+                Invoke("SwapOut", 0.4f); // 무기교체 끝 함수를 0.4초 뒤에 호출
             }
 
-            if (!hasWeapons[2] && hasWeapons[0] && equipWeapon == null)
+            if (!hasWeapons[2] && hasWeapons[0] && equipWeapon == null) // 서브머신건습득X, 손에무기X, 해머입수시
             {
-                equipWeapon = weapons[0].GetComponent<Weapon>();
-                equipWeapon.gameObject.SetActive(true);
+                equipWeapon = weapons[0].GetComponent<Weapon>(); // 해머의 Weapon 스크립트를 가져옴
+                equipWeapon.gameObject.SetActive(true); // 해머를 보이게 설정
 
-                anim.SetTrigger("doSwap");
+                anim.SetTrigger("doSwap"); // 무기교체 애니메이션 실행
 
-                isSwap = true;
+                isSwap = true; // 무기교체 여부를 true로
 
-                Invoke("SwapOut", 0.4f);
+                Invoke("SwapOut", 0.4f); // 무기교체 끝 함수를 0.4초 뒤에 호출
             }
         }
         
     }
 
-    void FreezeRotation()
+    void FreezeRotation() // 회전버그 방지 함수
     {
         rigid.angularVelocity = Vector3.zero; //회전속도를 vector3 제로로 설정하면 회전속도를 0으로 하기 때문에 스스로 도는 현상이 없어짐.
     }
@@ -343,10 +340,10 @@ public class Player : MonoBehaviour
         isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall")); //벽 물체랑 충돌을 하게 되면 bool 값이 true가 된다. true값이 move에다가 제한값을 줌
     }
 
-    void FixedUpdate()
+    void FixedUpdate() // 매 프레임마다 호출하는 
     {
-        FreezeRotation(); //플레이어가 자동으로 회전하는거 막는 함수
-        StopToWall(); //벽 관통하는거 막는 함수
+        FreezeRotation(); // 플레이어가 자동으로 회전하는거 막는 함수
+        StopToWall(); // 벽 관통하는거 막는 함수
     }
 
 
