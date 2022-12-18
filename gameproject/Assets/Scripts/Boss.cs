@@ -5,12 +5,13 @@ using UnityEngine.AI;
 
 public class Boss : Enemy
 {
+    // ë¯¸ì‚¬ì¼ì€ í•œë²ˆì— 2ë°œì”© ë°œì‚¬, A Bì˜ì—­ì—ì„œ ê°ê° 
     public GameObject missile;
     public Transform missilePortA;
     public Transform missilePortB;
-    public bool isLook; //¹æÇâ±×´ë·Î À¯Áö
+    public bool isLook; //ë°©í–¥ê·¸ëŒ€ë¡œ ìœ ì§€
 
-    Vector3 lookVec; //ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ ¿¹Ãø º¤ÅÍ º¯¼ö »ı¼º
+    Vector3 lookVec; //í”Œë ˆì´ì–´ ì›€ì§ì„ ì˜ˆì¸¡ ë²¡í„° ë³€ìˆ˜ ìƒì„±
     Vector3 tauntVec;
 
 
@@ -39,59 +40,59 @@ public class Boss : Enemy
 
         if (isLook)
         {
-            //ÇÃ·¹ÀÌ¾î ÀÔ·Â°ªÀ¸·Î ¿¹Ãø º¤ÅÍ°ª »ı¼º
+            //í”Œë ˆì´ì–´ ì…ë ¥ê°’ìœ¼ë¡œ ì˜ˆì¸¡ ë²¡í„°ê°’ ìƒì„±
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
             lookVec = new Vector3(h, 0, v) * 5f;
             transform.LookAt(target.position + lookVec);
         }
         else
-            nav.SetDestination(tauntVec); //Á¡ÇÁ °ø°İÇÒ ¶§ ¸ñÇ¥ÁöÁ¡À¸·Î ÀÌµ¿ÇÏµµ·Ï ·ÎÁ÷ Ãß°¡
+            nav.SetDestination(tauntVec); //ì í”„ ê³µê²©í•  ë•Œ ëª©í‘œì§€ì ìœ¼ë¡œ ì´ë™í•˜ë„ë¡ ë¡œì§ ì¶”ê°€
     }
 
-    IEnumerator Think() //Çàµ¿ ÆĞÅÏÀ» °áÁ¤ÇØÁÖ´Â ÄÚ·çÆ¾ »ı¼º
+    IEnumerator Think() //í–‰ë™ íŒ¨í„´ì„ ê²°ì •í•´ì£¼ëŠ” ì½”ë£¨í‹´ ìƒì„±
     {
-        yield return new WaitForSeconds(0.1f); //³­ÀÌµµ Á¶Á¤ÇÒ¶§ ÇÊ¿äÇÔ
+        yield return new WaitForSeconds(0.1f); //ë‚œì´ë„ ì¡°ì •í• ë•Œ í•„ìš”í•¨
 
-        int ranAction = Random.Range(0, 5); //Çàµ¿ ÆĞÅÏÀ» ¸¸µé±âÀ§ÇØ ·£´ıÇÔ¼ö È£Ãâ
+        int ranAction = Random.Range(0, 5); //í–‰ë™ íŒ¨í„´ì„ ë§Œë“¤ê¸°ìœ„í•´ ëœë¤í•¨ìˆ˜ í˜¸ì¶œ
         switch (ranAction)
         {
             case 0:
             case 1:
-                //¹Ì»çÀÏ ¹ß»ç ÆĞÅÏ
+                //ë¯¸ì‚¬ì¼ ë°œì‚¬ íŒ¨í„´
                 StartCoroutine(MissileShot());
                 break;
             case 2:
             case 3:
-                //µ¹ ±¼·¯°¡´Â ÆĞÅÏ
+                //ëŒ êµ´ëŸ¬ê°€ëŠ” íŒ¨í„´
                 StartCoroutine(RockShot());
                 break;
             case 4:
-                //Á¡ÇÁ °ø°İ ÆĞÅÏ
+                //ì í”„ ê³µê²© íŒ¨í„´
                 StartCoroutine(Taunt());
                 break;
         }
     }
 
-    IEnumerator MissileShot() //¹Ì»çÀÏ ¹ß»ç
+    IEnumerator MissileShot() //ë¯¸ì‚¬ì¼ ë°œì‚¬
     {
-        anim.SetTrigger("doShot"); //¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë
+        anim.SetTrigger("doShot"); //ì• ë‹ˆë©”ì´ì…˜ ì ìš©
         yield return new WaitForSeconds(0.2f);
-        GameObject instantMissileA = Instantiate(missile, missilePortA.position, missilePortA.rotation); //¹Ì»çÀÏ »ı¼º
+        GameObject instantMissileA = Instantiate(missile, missilePortA.position, missilePortA.rotation); //ë¯¸ì‚¬ì¼ ìƒì„±
         BossMissile bossMissileA = instantMissileA.GetComponent<BossMissile>();
         bossMissileA.target = target;
 
         yield return new WaitForSeconds(0.3f);
-        GameObject instantMissileB = Instantiate(missile, missilePortB.position, missilePortB.rotation); //¹Ì»çÀÏ »ı¼º
+        GameObject instantMissileB = Instantiate(missile, missilePortB.position, missilePortB.rotation); //ë¯¸ì‚¬ì¼ ìƒì„±
         BossMissile bossMissileB = instantMissileB.GetComponent<BossMissile>();
         bossMissileB.target = target;
 
         yield return new WaitForSeconds(2f);
 
-        StartCoroutine(Think()); //ÆĞÅÏÀÌ ³¡³ª¸é ´ÙÀ½ ÆĞÅÏÀ» À§ÇØ ´Ù½Ã think ÄÚ¸£Æ¾ ½ÇÇà
+        StartCoroutine(Think()); //íŒ¨í„´ì´ ëë‚˜ë©´ ë‹¤ìŒ íŒ¨í„´ì„ ìœ„í•´ ë‹¤ì‹œ think ì½”ë¥´í‹´ ì‹¤í–‰
     }
 
-    IEnumerator RockShot() //µ¹±¼¸®±â
+    IEnumerator RockShot() //ëŒêµ´ë¦¬ê¸°
     {
         isLook = false;
         anim.SetTrigger("doBigShot");
@@ -99,17 +100,17 @@ public class Boss : Enemy
         yield return new WaitForSeconds(3f);
 
         isLook = true;
-        StartCoroutine(Think()); //ÆĞÅÏÀÌ ³¡³ª¸é ´ÙÀ½ ÆĞÅÏÀ» À§ÇØ ´Ù½Ã think ÄÚ¸£Æ¾ ½ÇÇà
+        StartCoroutine(Think()); //íŒ¨í„´ì´ ëë‚˜ë©´ ë‹¤ìŒ íŒ¨í„´ì„ ìœ„í•´ ë‹¤ì‹œ think ì½”ë¥´í‹´ ì‹¤í–‰
     }
 
     IEnumerator Taunt()
     {
-        tauntVec = target.position + lookVec;  //Á¡ÇÁ °ø°İÀ» ÇÒ À§Ä¡¸¦ º¯¼ö¿¡ ÀúÀå
+        tauntVec = target.position + lookVec;  //ì í”„ ê³µê²©ì„ í•  ìœ„ì¹˜ë¥¼ ë³€ìˆ˜ì— ì €ì¥
 
         isLook = false;
         nav.isStopped = false;
         boxCollider.enabled = false;
-        anim.SetTrigger("doTaunt");  //¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë
+        anim.SetTrigger("doTaunt");  //ì• ë‹ˆë©”ì´ì…˜ ì ìš©
 
         yield return new WaitForSeconds(0.6f);
         meleeArea.enabled = true;
@@ -121,6 +122,6 @@ public class Boss : Enemy
         isLook = true;
         nav.isStopped = true;
         boxCollider.enabled = true;
-        StartCoroutine(Think()); //ÆĞÅÏÀÌ ³¡³ª¸é ´ÙÀ½ ÆĞÅÏÀ» À§ÇØ ´Ù½Ã think ÄÚ¸£Æ¾ ½ÇÇà
+        StartCoroutine(Think()); //íŒ¨í„´ì´ ëë‚˜ë©´ ë‹¤ìŒ íŒ¨í„´ì„ ìœ„í•´ ë‹¤ì‹œ think ì½”ë¥´í‹´ ì‹¤í–‰
     }
 }
