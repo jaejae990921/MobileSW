@@ -5,11 +5,11 @@ using UnityEngine;
 public class BossRock : Bullet
 {
     Rigidbody rigid;
-    //¸®Áöµå ¹Ùµğ º¯¼ö¿Í È¸Àü ÆÄ¿ö , Å©±â ¼ıÀÚ°ª º¯¼ö »ı¼º 
+    //ë¦¬ì§€ë“œ ë°”ë”” ë³€ìˆ˜ì™€ íšŒì „ íŒŒì›Œ , í¬ê¸° ìˆ«ìê°’ ë³€ìˆ˜ ìƒì„± 
     float angularPower = 2;
     float scaleValue = 0.1f;
 
-    bool isShoot; //±â¸¦ ¸ğÀ¸°í ½î´Â Å¸ÀÌ¹ÖÀ» °ü¸®ÇÒ boolº¯¼ö 
+    bool isShoot; //ê¸°ë¥¼ ëª¨ìœ¼ê³  ì˜ëŠ” íƒ€ì´ë°ì„ ê´€ë¦¬í•  boolë³€ìˆ˜ 
 
     void Awake()
     {
@@ -20,19 +20,19 @@ public class BossRock : Bullet
 
     IEnumerator GainPowerTimer()
     {
-        yield return new WaitForSeconds(2.2f); //2.2ÃÊ°¡ µÇ¸é ½÷¶ó!!
+        yield return new WaitForSeconds(2.2f); //2.2ì´ˆê°€ ë˜ë©´ ì´ë¼!!
         isShoot = true;
     }
 
     IEnumerator GainPower()
     {
-        while (!isShoot) //½î´Â »óÈ²ÀÌ ¾Æ´Ñ°æ¿ì
+        while (!isShoot) //ì˜ëŠ” ìƒí™©ì´ ì•„ë‹Œê²½ìš°
         {
             angularPower += 0.02f;
-            scaleValue += 0.005f;
-            transform.localScale = Vector3.one * scaleValue; //while¹®¿¡¼­ Áõ°¡µÈ °ªÀ» Æ®·£½ºÆû, ¸®Áöµå ¹Ùµğ¿¡ Àû¿ë
+            scaleValue += 0.005f; // ë°”ìœ„ í¬ê¸° ë³€í™” í•´ìƒë„ì— ë”°ë¼ í¬ê¸°ê°€ ë‹¬ë¼ì§
+            transform.localScale = Vector3.one * scaleValue; //whileë¬¸ì—ì„œ ì¦ê°€ëœ ê°’ì„ íŠ¸ëœìŠ¤í¼, ë¦¬ì§€ë“œ ë°”ë””ì— ì ìš©
             rigid.AddTorque(transform.right * angularPower, ForceMode.Acceleration);
-            yield return null; //while¹®¿¡ ²À Àû¾î¾ß ÇÏ´Â ÄÚµå
+            yield return null; //whileë¬¸ì— ê¼­ ì ì–´ì•¼ í•˜ëŠ” ì½”ë“œ
         }
     }
 }
