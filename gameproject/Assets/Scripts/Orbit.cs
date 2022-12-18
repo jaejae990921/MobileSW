@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orbit : MonoBehaviour
+public class Orbit : MonoBehaviour // ìˆ˜ë¥˜íƒ„ ê¸°ëŠ¥ ê´€ë ¨ ìŠ¤í¬ë¦½íŠ¸
 {
     public Transform target;
     public float orbitSpeed;
-    Vector3 offSet; //°íÁ¤°ª
+    Vector3 offSet; //ê³ ì •ê°’
 
 
 
     void Start()
     {
-        offSet = transform.position - target.position; //¼ö·ùÅº À§Ä¡¿¡¼­ Å¸°ÙÀ§Ä¡¸¦ »­
+        offSet = transform.position - target.position; //ìˆ˜ë¥˜íƒ„ ìœ„ì¹˜ì—ì„œ íƒ€ê²Ÿìœ„ì¹˜ë¥¼ ëºŒ
     }
 
  
     void Update()
     {
         transform.position = target.position + offSet;
-        transform.RotateAround(target.position, Vector3.up, orbitSpeed * Time.deltaTime); //Å¸°Ù ÁÖÀ§¸¦ È¸ÀüÇÏ´Â ÇÔ¼ö
+        transform.RotateAround(target.position, Vector3.up, orbitSpeed * Time.deltaTime); //íƒ€ê²Ÿ ì£¼ìœ„ë¥¼ íšŒì „í•˜ëŠ” í•¨ìˆ˜
         offSet = transform.position - target.position;
     }
 }
