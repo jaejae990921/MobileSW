@@ -94,7 +94,7 @@ public class Enemy : MonoBehaviour
             RaycastHit[] rayHits =
                 Physics.SphereCastAll(transform.position, //자신의 위치
                 targetRadius,
-                transform.forward, targetRange, LayerMask.GetMask("Player"));
+                transform.forward, targetRange, LayerMask.GetMask("Player")); // 타겟은 Player
 
             if (rayHits.Length > 0 && !isAttack && !isDead) //rayHit 변수에 데이터가 들어오면 공격 코르틴 실행
             {
@@ -112,7 +112,7 @@ public class Enemy : MonoBehaviour
 
         switch (enemyType) //타게팅 수치를 정하기
         {
-            case Type.A:
+            case Type.A: // 일반 몬스터
                 yield return new WaitForSeconds(0.2f); //애니메이션 작동을 위한 딜레이를 줌
                 meleeArea.enabled = true;
 
@@ -120,7 +120,7 @@ public class Enemy : MonoBehaviour
                 meleeArea.enabled = false;
                 break;
 
-            case Type.B:
+            case Type.B: // 돌격 몬스터
                 yield return new WaitForSeconds(0.1f); //애니메이션 작동을 위한 딜레이를 줌
                 rigid.AddForce(transform.forward * 20, ForceMode.Impulse); //돌격 구현 20파워
                 meleeArea.enabled = true;
@@ -132,7 +132,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(2f);
                 break;
 
-            case Type.C:
+            case Type.C: // 원거리 공격 몬스터 ( 미사일 )
                 yield return new WaitForSeconds(0.5f);
                 GameObject instantBullet = Instantiate(bullet, transform.position, transform.rotation);
                 Rigidbody rigidBullet = instantBullet.GetComponent<Rigidbody>();
@@ -185,20 +185,20 @@ public class Enemy : MonoBehaviour
         
     }
 
-    IEnumerator meleeOnDamage(Vector3 reactVec) //피격로직 로직을 담을 코르틴 생성
+    IEnumerator meleeOnDamage(Vector3 reactVec) // 근접무기로 맞았을 때 
     {
         foreach (MeshRenderer mesh in meshs)
             mesh.material.color = Color.red; //색깔 입히는 코드 ★
 
         yield return new WaitForSeconds(0.1f); //시간 정하는 코드
 
-        if (curHealth > 0 && !isDead)
+        if (curHealth > 0 && !isDead) // 죽지 않았을 때 
         {
             foreach (MeshRenderer mesh in meshs)
                 mesh.material.color = Color.white; //아직죽지 않았을시 색상 하얀색 색깔 입히는 코드 ★
 
         }
-        else
+        else // 몬스터가 죽었을 때
         {
             isDead = true;
             foreach (MeshRenderer mesh in meshs)
@@ -211,7 +211,7 @@ public class Enemy : MonoBehaviour
             Player player = target.GetComponent<Player>();
             player.score += score;
 
-            switch (enemyType)
+            switch (enemyType) // 죽은 몬스터 수를 전체 몬스터 수에서 
             {
 
                 case Type.A:
@@ -243,20 +243,20 @@ public class Enemy : MonoBehaviour
         isDamage= false; 
     }
 
-    IEnumerator rangeOnDamage(Vector3 reactVec) //피격로직 로직을 담을 코르틴 생성
+    IEnumerator rangeOnDamage(Vector3 reactVec) // 원거리 무기로 피격했을 때 코루틴
     {
         foreach (MeshRenderer mesh in meshs)
             mesh.material.color = Color.red; //색깔 입히는 코드 ★
 
         yield return new WaitForSeconds(0.1f); //시간 정하는 코드
 
-        if (curHealth > 0 && !isDead)
+        if (curHealth > 0 && !isDead) // 죽지 않았을 때 피격 
         {
             foreach (MeshRenderer mesh in meshs)
                 mesh.material.color = Color.white; //아직죽지 않았을시 색상 하얀색 색깔 입히는 코드 ★
 
         }
-        else
+        else // 죽었을 때 
         {
             isDead = true;
             foreach (MeshRenderer mesh in meshs)
@@ -269,7 +269,7 @@ public class Enemy : MonoBehaviour
             Player player = target.GetComponent<Player>();
             player.score += score;
 
-            switch (enemyType)
+            switch (enemyType) // 죽었을 때 죽은 몬스터를 전체 몬스터 수에서 뺌
             {
 
                 case Type.A:
