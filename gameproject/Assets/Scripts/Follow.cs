@@ -6,7 +6,7 @@ public class Follow : MonoBehaviour
 {
 
     public Transform target;
-    public Vector3 offset; //고정값 유지를 위해서 
+    public Vector3 offset; 
   
     void Update()
     {
