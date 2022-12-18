@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Boss : Enemy
 {
+    // 미사일은 한번에 2발씩 발사, A B영역에서 각각 
     public GameObject missile;
     public Transform missilePortA;
     public Transform missilePortB;
