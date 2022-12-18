@@ -5,15 +5,15 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { A, B, C, D }; //enumÀ¸·Î Å¸ÀÔÀ» ³ª´©°í º¯¼ö¸¦ »ı¼º
+    public enum Type { A, B, C, D }; //enumìœ¼ë¡œ íƒ€ì…ì„ ë‚˜ëˆ„ê³  ë³€ìˆ˜ë¥¼ ìƒì„±
     public Type enemyType;
-    public int maxHealth; //Ã¼·Â°ú ÄÄÆ÷³Í½º¸¦ ´ãÀ» º¯¼ö ¼±¾ğ
+    public int maxHealth; //ì²´ë ¥ê³¼ ì»´í¬ë„ŒìŠ¤ë¥¼ ë‹´ì„ ë³€ìˆ˜ ì„ ì–¸
     public int curHealth;
     public int score;
     public GameManager manager;
 
-    public Transform target; //¸ñÇ¥°¡ µÉ º¯¼ö
-    public BoxCollider meleeArea; //Äİ¶óÀÌ´õ¸¦ ´ãÀ» º¯¼ö Ãß°¡
+    public Transform target; //ëª©í‘œê°€ ë  ë³€ìˆ˜
+    public BoxCollider meleeArea; //ì½œë¼ì´ë”ë¥¼ ë‹´ì„ ë³€ìˆ˜ ì¶”ê°€
     public GameObject bullet;
     public bool isChase;
     public bool isAttack;
@@ -22,11 +22,11 @@ public class Enemy : MonoBehaviour
 
     public Rigidbody rigid;
     public BoxCollider boxCollider;
-    public MeshRenderer[] meshs; //¹°Ã¼ »ö
+    public MeshRenderer[] meshs; //ë¬¼ì²´ ìƒ‰
     public NavMeshAgent nav;
-    public Animator anim; //¾Ö´Ï¸ŞÀÌ¼Ç
+    public Animator anim; //ì• ë‹ˆë©”ì´ì…˜
 
-    void Awake() //ÃÊ±âÈ­
+    void Awake() //ì´ˆê¸°í™”
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
@@ -38,91 +38,91 @@ public class Enemy : MonoBehaviour
             Invoke("ChaseStart", 2);
     }
 
-    void ChaseStart()
+    void ChaseStart() // ì¶”ì  ì‹œì‘ í•¨ìˆ˜
     {
-        isChase = true;
-        anim.SetBool("isWalk", true);
+        isChase = true; // ì¶”ì„ ì—¬ë¶€
+        anim.SetBool("isWalk", true); // ì• ë‹ˆë©”ì´ì…˜ iswalk 
     }
 
     void Update()
     {
 
-        if (nav.enabled && enemyType != Type.D) //³×ºñ°ÔÀÌ¼ÇÀÌ È°¼ºÈ­ µÇ¾îÀÖÀ»¶§¸¸
+        if (nav.enabled && enemyType != Type.D) //ë„¤ë¹„ê²Œì´ì…˜ì´ í™œì„±í™” ë˜ì–´ìˆì„ë•Œë§Œ
         {
-            nav.SetDestination(target.position); //µµÂøÇÒ ¸ñÇ¥ À§Ä¡ ÁöÁ¤ ÇÔ¼ö
-            nav.isStopped = !isChase; //¿Ïº®ÇÏ°Ô ¸ØÃßµµ·Ï ÀÛ¼º
+            nav.SetDestination(target.position); //ë„ì°©í•  ëª©í‘œ ìœ„ì¹˜ ì§€ì • í•¨ìˆ˜
+            nav.isStopped = !isChase; //ì™„ë²½í•˜ê²Œ ë©ˆì¶”ë„ë¡ ì‘ì„±
         }
     }
 
 
-    void FreezeVelocity() //ÀÌµ¿À» ¹æÇØ ÇÏÁö ¾Êµµ·ÏÇÏ´Â ·ÎÁ÷
+    void FreezeVelocity() //ì´ë™ì„ ë°©í•´ í•˜ì§€ ì•Šë„ë¡í•˜ëŠ” ë¡œì§
     {
         if (isChase)
         {
             rigid.velocity = Vector3.zero;
-            rigid.angularVelocity = Vector3.zero; //È¸Àü¼Óµµ¸¦ vector3 Á¦·Î·Î ¼³Á¤ÇÏ¸é È¸Àü¼Óµµ¸¦ 0À¸·Î ÇÏ±â ¶§¹®¿¡ ½º½º·Î µµ´Â Çö»óÀÌ ¾ø¾îÁü.
+            rigid.angularVelocity = Vector3.zero; //íšŒì „ì†ë„ë¥¼ vector3 ì œë¡œë¡œ ì„¤ì •í•˜ë©´ íšŒì „ì†ë„ë¥¼ 0ìœ¼ë¡œ í•˜ê¸° ë•Œë¬¸ì— ìŠ¤ìŠ¤ë¡œ ë„ëŠ” í˜„ìƒì´ ì—†ì–´ì§.
         }
     }
-    void Targetting()
+    void Targetting()  // Playerë¥¼ ëª©í‘œë¡œ ì›€ì§ì´ëŠ” ê¸°ëŠ¥
     { 
 
         if(!isDead && enemyType != Type.D)
         {
 
-            //ShpereCast()ÀÇ ¹İÁö¸§, ±æÀÌ¸¦ Á¶Á¤ÇÒ º¯¼ö ¼±¾ğ
+            //ShpereCast()ì˜ ë°˜ì§€ë¦„, ê¸¸ì´ë¥¼ ì¡°ì •í•  ë³€ìˆ˜ ì„ ì–¸
             float targetRadius = 0;
             float targetRange = 0;
 
-            switch (enemyType) //Å¸°ÔÆÃ ¼öÄ¡¸¦ Á¤ÇÏ±â ¡Ú
+            switch (enemyType) //íƒ€ê²ŒíŒ… ìˆ˜ì¹˜ë¥¼ ì •í•˜ê¸° â˜…
             {
                 case Type.A:
-                    targetRadius = 1.5f; //°ø°İ Æø
-                    targetRange = 3f; //°ø°İ¹üÀ§
+                    targetRadius = 1.5f; //ê³µê²© í­
+                    targetRange = 3f; //ê³µê²©ë²”ìœ„
                     break;
                 case Type.B:
-                    targetRadius = 1f; //°ø°İ Æø
-                    targetRange = 10f; //°ø°İ¹üÀ§
+                    targetRadius = 1f; //ê³µê²© í­
+                    targetRange = 10f; //ê³µê²©ë²”ìœ„
                     break;
                 case Type.C:
-                    targetRadius = 0.5f; //°ø°İ Æø
-                    targetRange = 25f; //°ø°İ¹üÀ§
+                    targetRadius = 0.5f; //ê³µê²© í­
+                    targetRange = 25f; //ê³µê²©ë²”ìœ„
                     break;
             }
 
 
             RaycastHit[] rayHits =
-                Physics.SphereCastAll(transform.position, //ÀÚ½ÅÀÇ À§Ä¡
+                Physics.SphereCastAll(transform.position, //ìì‹ ì˜ ìœ„ì¹˜
                 targetRadius,
-                transform.forward, targetRange, LayerMask.GetMask("Player"));
+                transform.forward, targetRange, LayerMask.GetMask("Player")); // íƒ€ê²Ÿì€ Player
 
-            if (rayHits.Length > 0 && !isAttack && !isDead) //rayHit º¯¼ö¿¡ µ¥ÀÌÅÍ°¡ µé¾î¿À¸é °ø°İ ÄÚ¸£Æ¾ ½ÇÇà
+            if (rayHits.Length > 0 && !isAttack && !isDead) //rayHit ë³€ìˆ˜ì— ë°ì´í„°ê°€ ë“¤ì–´ì˜¤ë©´ ê³µê²© ì½”ë¥´í‹´ ì‹¤í–‰
             {
 
                 StartCoroutine(Attack());
             }
         }
     }
-    IEnumerator Attack() //¸ó½ºÅÍ °ø°İ
+    IEnumerator Attack() //ëª¬ìŠ¤í„° ê³µê²©
     {
        
 
-        isChase = false; //¸ó½ºÅÍ°¡ Á¤ÁöÇÔ
-        isAttack = true; //¸ó½ºÅÍ°¡ °ø°İÇÔ
-        anim.SetBool("isAttack", true); //°ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë
+        isChase = false; //ëª¬ìŠ¤í„°ê°€ ì •ì§€í•¨
+        isAttack = true; //ëª¬ìŠ¤í„°ê°€ ê³µê²©í•¨
+        anim.SetBool("isAttack", true); //ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì ìš©
 
-        switch (enemyType) //Å¸°ÔÆÃ ¼öÄ¡¸¦ Á¤ÇÏ±â
+        switch (enemyType) //íƒ€ê²ŒíŒ… ìˆ˜ì¹˜ë¥¼ ì •í•˜ê¸°
         {
-            case Type.A:
-                yield return new WaitForSeconds(0.2f); //¾Ö´Ï¸ŞÀÌ¼Ç ÀÛµ¿À» À§ÇÑ µô·¹ÀÌ¸¦ ÁÜ
+            case Type.A: // ì¼ë°˜ ê³µê²© ëª¬ìŠ¤í„°
+                yield return new WaitForSeconds(0.2f); //ì• ë‹ˆë©”ì´ì…˜ ì‘ë™ì„ ìœ„í•œ ë”œë ˆì´ë¥¼ ì¤Œ
                 meleeArea.enabled = true;
 
-                yield return new WaitForSeconds(0.5f); //¾Ö´Ï¸ŞÀÌ¼Ç ÀÛµ¿À» À§ÇÑ µô·¹ÀÌ¸¦ ÁÜ
+                yield return new WaitForSeconds(0.5f); //ì• ë‹ˆë©”ì´ì…˜ ì‘ë™ì„ ìœ„í•œ ë”œë ˆì´ë¥¼ ì¤Œ
                 meleeArea.enabled = false;
                 break;
 
-            case Type.B:
-                yield return new WaitForSeconds(0.1f); //¾Ö´Ï¸ŞÀÌ¼Ç ÀÛµ¿À» À§ÇÑ µô·¹ÀÌ¸¦ ÁÜ
-                rigid.AddForce(transform.forward * 20, ForceMode.Impulse); //µ¹°İ ±¸Çö 20ÆÄ¿ö
+            case Type.B: // ëŒì§„ ê³µê²© ëª¬ìŠ¤í„°
+                yield return new WaitForSeconds(0.1f); //ì• ë‹ˆë©”ì´ì…˜ ì‘ë™ì„ ìœ„í•œ ë”œë ˆì´ë¥¼ ì¤Œ
+                rigid.AddForce(transform.forward * 20, ForceMode.Impulse); //ëŒê²© êµ¬í˜„ 20íŒŒì›Œ
                 meleeArea.enabled = true;
 
                 yield return new WaitForSeconds(0.5f);
@@ -132,7 +132,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(2f);
                 break;
 
-            case Type.C:
+            case Type.C: // ì›ê±°ë¦¬ ê³µê²© ëª¬ìŠ¤í„° (ë¯¸ì‚¬ì¼)
                 yield return new WaitForSeconds(0.5f);
                 GameObject instantBullet = Instantiate(bullet, transform.position, transform.rotation);
                 Rigidbody rigidBullet = instantBullet.GetComponent<Rigidbody>();
@@ -156,34 +156,34 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         Targetting();
-        FreezeVelocity(); //ÇÃ·¹ÀÌ¾î°¡ ÀÚµ¿À¸·Î È¸ÀüÇÏ´Â°Å ¸·´Â ÇÔ¼ö
+        FreezeVelocity(); //í”Œë ˆì´ì–´ê°€ ìë™ìœ¼ë¡œ íšŒì „í•˜ëŠ”ê±° ë§‰ëŠ” í•¨ìˆ˜
         
     }
 
-    void OnTriggerEnter(Collider other) //³¯¾Æ¿À´Â ÃÑ¾Ë, ÇØ¸Ó
+    void OnTriggerEnter(Collider other) //ë‚ ì•„ì˜¤ëŠ” ì´ì•Œ, í•´ë¨¸
     {
         
-        // ±ÙÁ¢¹«±âÀÇ colliderÀÇ OnTriggerEnterÀÌ 2¹ø ½ÇÇàµÇ´Â ¹ö±×°¡ ÀÖ¾î ¼öÁ¤
-        // isDamage º¯¼ö¸¦ ÅëÇØ Ã¹¹ø¤Š °ø°İÀÌÈÄ ±ÙÁ¢ ¹«±âÀÇ ¸ğ¼ÇÀÌ ³¡³­ µÚ ´Ù½Ã ½ÇÇàµÉ¼ö ÀÖµµ·Ï ¼öÁ¤
-        if (other.tag == "Melee") //±ÙÁ¢¹«±â °ø°İ ¸ÂÀ»¶§
+        // ê·¼ì ‘ë¬´ê¸°ì˜ colliderì˜ OnTriggerEnterì´ 2ë²ˆ ì‹¤í–‰ë˜ëŠ” ë²„ê·¸ê°€ ìˆì–´ ìˆ˜ì •
+        // isDamage ë³€ìˆ˜ë¥¼ í†µí•´ ì²«ë²ˆÂŠ ê³µê²©ì´í›„ ê·¼ì ‘ ë¬´ê¸°ì˜ ëª¨ì…˜ì´ ëë‚œ ë’¤ ë‹¤ì‹œ ì‹¤í–‰ë ìˆ˜ ìˆë„ë¡ ìˆ˜ì •
+        if (other.tag == "Melee") //ê·¼ì ‘ë¬´ê¸° ê³µê²© ë§ì„ë•Œ
         {
-            if(isDamage) { return; } // µ¥¹ÌÁö°¡ µé¾î°¡´Â ÁßÀÌ¸é ½ÇÇà ¾ÈµÊ
-            isDamage = true;        // µ¥¹ÌÁö°¡ false¸é true·Î ¹Ù²ãÁÖ°í ³ª¸ÓÁö °ø°İ ½ÇÇà
-            Weapon weapon = other.GetComponent<Weapon>(); //Ãæµ¹ »ó´ëÀÇ ½ºÅ©¸³Æ®¸¦ °¡Á®¿Í damage°ªÀ» Ã¼·Â¿¡ Àû¿ë
+            if(isDamage) { return; } // ë°ë¯¸ì§€ê°€ ë“¤ì–´ê°€ëŠ” ì¤‘ì´ë©´ ì‹¤í–‰ ì•ˆë¨
+            isDamage = true;        // ë°ë¯¸ì§€ê°€ falseë©´ trueë¡œ ë°”ê¿”ì£¼ê³  ë‚˜ë¨¸ì§€ ê³µê²© ì‹¤í–‰
+            Weapon weapon = other.GetComponent<Weapon>(); //ì¶©ëŒ ìƒëŒ€ì˜ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ê°€ì ¸ì™€ damageê°’ì„ ì²´ë ¥ì— ì ìš©
             curHealth -= weapon.damage;
             Vector3 reactVec = transform.position - other.transform.position;
 
             StartCoroutine(meleeOnDamage(reactVec));
 
         }
-        else if (other.tag == "Bullet") //¿ø°Å¸® °ø°İ ¸ÂÀ»¶§
+        else if (other.tag == "Bullet") //ì›ê±°ë¦¬ ê³µê²© ë§ì„ë•Œ
         {
             
 
-            Bullet bullet = other.GetComponent<Bullet>(); //Ãæµ¹ »ó´ëÀÇ ½ºÅ©¸³Æ®¸¦ °¡Á®¿Í damage°ªÀ» Ã¼·Â¿¡ Àû¿ë
+            Bullet bullet = other.GetComponent<Bullet>(); //ì¶©ëŒ ìƒëŒ€ì˜ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ê°€ì ¸ì™€ damageê°’ì„ ì²´ë ¥ì— ì ìš©
             curHealth -= bullet.damage;
             Vector3 reactVec = transform.position - other.transform.position;
-            Destroy(other.gameObject); //ÃÑ¾ËÀÇ °æ¿ì Àû°ú ´ê¾ÒÀ»¶§ »èÁ¦ µÇµµ·Ï ÄÚµå
+            Destroy(other.gameObject); //ì´ì•Œì˜ ê²½ìš° ì ê³¼ ë‹¿ì•˜ì„ë•Œ ì‚­ì œ ë˜ë„ë¡ ì½”ë“œ
 
 
             StartCoroutine(rangeOnDamage(reactVec));
@@ -191,29 +191,29 @@ public class Enemy : MonoBehaviour
         
     }
 
-    IEnumerator meleeOnDamage(Vector3 reactVec) //ÇÇ°İ·ÎÁ÷ ·ÎÁ÷À» ´ãÀ» ÄÚ¸£Æ¾ »ı¼º
+    IEnumerator meleeOnDamage(Vector3 reactVec) // ê·¼ì ‘ ë¬´ê¸° í”¼ê²© ë¡œì§
     {
         foreach (MeshRenderer mesh in meshs)
-            mesh.material.color = Color.red; //»ö±ò ÀÔÈ÷´Â ÄÚµå ¡Ú
+            mesh.material.color = Color.red; //ìƒ‰ê¹” ì…íˆëŠ” ì½”ë“œ â˜…
 
-        yield return new WaitForSeconds(0.1f); //½Ã°£ Á¤ÇÏ´Â ÄÚµå
+        yield return new WaitForSeconds(0.1f); //ì‹œê°„ ì •í•˜ëŠ” ì½”ë“œ
 
-        if (curHealth > 0 && !isDead)
+        if (curHealth > 0 && !isDead) // ì£½ì§€ ì•Šì•˜ì„ ë•Œ
         {
             foreach (MeshRenderer mesh in meshs)
-                mesh.material.color = Color.white; //¾ÆÁ÷Á×Áö ¾Ê¾ÒÀ»½Ã »ö»ó ÇÏ¾á»ö »ö±ò ÀÔÈ÷´Â ÄÚµå ¡Ú
+                mesh.material.color = Color.white; //ì•„ì§ì£½ì§€ ì•Šì•˜ì„ì‹œ ìƒ‰ìƒ í•˜ì–€ìƒ‰ ìƒ‰ê¹” ì…íˆëŠ” ì½”ë“œ â˜…
 
         }
-        else
+        else // ì£½ì—ˆì„ 
         {
             isDead = true;
             foreach (MeshRenderer mesh in meshs)
-                mesh.material.color = Color.gray; //Á×À¸¸é È¸»öÀ¸·Î º¯°æ »ö±ò ÀÔÈ÷´Â ÄÚµå ¡Ú
+                mesh.material.color = Color.gray; //ì£½ìœ¼ë©´ íšŒìƒ‰ìœ¼ë¡œ ë³€ê²½ ìƒ‰ê¹” ì…íˆëŠ” ì½”ë“œ â˜…
 
-            gameObject.layer = 14; //·¹ÀÌ¾î ±×´ë·Î 14¹ø (´õÀÌ»ó ¹°¸® Ãæµ¹ ÇÏÁö ¾Ê°í)
+            gameObject.layer = 14; //ë ˆì´ì–´ ê·¸ëŒ€ë¡œ 14ë²ˆ (ë”ì´ìƒ ë¬¼ë¦¬ ì¶©ëŒ í•˜ì§€ ì•Šê³ )
             isChase = false;
             nav.enabled = false;
-            anim.SetTrigger("doDie"); //ÀûÀÌ Á×´Â ½ÃÁ¡¿¡¼­µµ ¾Ö´Ï¸ŞÀÌ¼Ç°ú ÇÃ·¡±× ¼ÂÆÃ
+            anim.SetTrigger("doDie"); //ì ì´ ì£½ëŠ” ì‹œì ì—ì„œë„ ì• ë‹ˆë©”ì´ì…˜ê³¼ í”Œë˜ê·¸ ì…‹íŒ…
             Player player = target.GetComponent<Player>();
             player.score += score;
 
@@ -236,12 +236,12 @@ public class Enemy : MonoBehaviour
 
             }
 
-            reactVec = reactVec.normalized; //¸®¿¢¼ÇÀ» À§ÇØ vectorÀ» ¼±¾ğ
+            reactVec = reactVec.normalized; //ë¦¬ì—‘ì…˜ì„ ìœ„í•´ vectorì„ ì„ ì–¸
             reactVec += Vector3.up;
 
-            rigid.AddForce(reactVec * 5, ForceMode.Impulse); //ÇÔ¼ö·Î ³Ë¹é ±¸ÇöÇÏ±â (µŞÂÊÀ¸·Î ÈûÀÌ °¡ÇØÁø´Ù)
+            rigid.AddForce(reactVec * 5, ForceMode.Impulse); //í•¨ìˆ˜ë¡œ ë„‰ë°± êµ¬í˜„í•˜ê¸° (ë’·ìª½ìœ¼ë¡œ í˜ì´ ê°€í•´ì§„ë‹¤)
 
-            Destroy(gameObject, 2f); //Á×¾úÀ»½Ã 2ÃÊµÚ ÆÄ±«µÊ 
+            Destroy(gameObject, 2f); //ì£½ì—ˆì„ì‹œ 2ì´ˆë’¤ íŒŒê´´ë¨ 
 
         }
 
@@ -249,29 +249,29 @@ public class Enemy : MonoBehaviour
         isDamage= false; 
     }
 
-    IEnumerator rangeOnDamage(Vector3 reactVec) //ÇÇ°İ·ÎÁ÷ ·ÎÁ÷À» ´ãÀ» ÄÚ¸£Æ¾ »ı¼º
+    IEnumerator rangeOnDamage(Vector3 reactVec) // ì›ê±°ë¦¬ ë¬´ê¸° í”¼ê²©ì— ëŒ€í•œ ë¡œì§ 
     {
         foreach (MeshRenderer mesh in meshs)
-            mesh.material.color = Color.red; //»ö±ò ÀÔÈ÷´Â ÄÚµå ¡Ú
+            mesh.material.color = Color.red; //ìƒ‰ê¹” ì…íˆëŠ” ì½”ë“œ â˜…
 
-        yield return new WaitForSeconds(0.1f); //½Ã°£ Á¤ÇÏ´Â ÄÚµå
+        yield return new WaitForSeconds(0.1f); //ì‹œê°„ ì •í•˜ëŠ” ì½”ë“œ
 
-        if (curHealth > 0 && !isDead)
+        if (curHealth > 0 && !isDead) // ëª¬ìŠ¤í„°ê°€ ì£½ì§€ ì•Šì•˜ì„ ë•Œ
         {
             foreach (MeshRenderer mesh in meshs)
-                mesh.material.color = Color.white; //¾ÆÁ÷Á×Áö ¾Ê¾ÒÀ»½Ã »ö»ó ÇÏ¾á»ö »ö±ò ÀÔÈ÷´Â ÄÚµå ¡Ú
+                mesh.material.color = Color.white; //ì•„ì§ì£½ì§€ ì•Šì•˜ì„ì‹œ ìƒ‰ìƒ í•˜ì–€ìƒ‰ ìƒ‰ê¹” ì…íˆëŠ” ì½”ë“œ â˜…
 
         }
-        else
+        else // ëª¬ìŠ¤í„°ê°€ ì£½ì—ˆì„ 
         {
             isDead = true;
             foreach (MeshRenderer mesh in meshs)
-                mesh.material.color = Color.gray; //Á×À¸¸é È¸»öÀ¸·Î º¯°æ »ö±ò ÀÔÈ÷´Â ÄÚµå ¡Ú
+                mesh.material.color = Color.gray; //ì£½ìœ¼ë©´ íšŒìƒ‰ìœ¼ë¡œ ë³€ê²½ ìƒ‰ê¹” ì…íˆëŠ” ì½”ë“œ â˜…
 
-            gameObject.layer = 14; //·¹ÀÌ¾î ±×´ë·Î 14¹ø (´õÀÌ»ó ¹°¸® Ãæµ¹ ÇÏÁö ¾Ê°í)
+            gameObject.layer = 14; //ë ˆì´ì–´ ê·¸ëŒ€ë¡œ 14ë²ˆ (ë”ì´ìƒ ë¬¼ë¦¬ ì¶©ëŒ í•˜ì§€ ì•Šê³ )
             isChase = false;
             nav.enabled = false;
-            anim.SetTrigger("doDie"); //ÀûÀÌ Á×´Â ½ÃÁ¡¿¡¼­µµ ¾Ö´Ï¸ŞÀÌ¼Ç°ú ÇÃ·¡±× ¼ÂÆÃ
+            anim.SetTrigger("doDie"); //ì ì´ ì£½ëŠ” ì‹œì ì—ì„œë„ ì• ë‹ˆë©”ì´ì…˜ê³¼ í”Œë˜ê·¸ ì…‹íŒ…
             Player player = target.GetComponent<Player>();
             player.score += score;
 
@@ -294,12 +294,12 @@ public class Enemy : MonoBehaviour
 
             }
 
-            reactVec = reactVec.normalized; //¸®¿¢¼ÇÀ» À§ÇØ vectorÀ» ¼±¾ğ
+            reactVec = reactVec.normalized; //ë¦¬ì—‘ì…˜ì„ ìœ„í•´ vectorì„ ì„ ì–¸
             reactVec += Vector3.up;
 
-            rigid.AddForce(reactVec * 5, ForceMode.Impulse); //ÇÔ¼ö·Î ³Ë¹é ±¸ÇöÇÏ±â (µŞÂÊÀ¸·Î ÈûÀÌ °¡ÇØÁø´Ù)
+            rigid.AddForce(reactVec * 5, ForceMode.Impulse); //í•¨ìˆ˜ë¡œ ë„‰ë°± êµ¬í˜„í•˜ê¸° (ë’·ìª½ìœ¼ë¡œ í˜ì´ ê°€í•´ì§„ë‹¤)
 
-            Destroy(gameObject, 2f); //Á×¾úÀ»½Ã 2ÃÊµÚ ÆÄ±«µÊ 
+            Destroy(gameObject, 2f); //ì£½ì—ˆì„ì‹œ 2ì´ˆë’¤ íŒŒê´´ë¨ 
 
         }
 
