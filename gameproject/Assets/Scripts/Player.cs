@@ -5,43 +5,43 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public FixedJoystick joy; // Á¶ÀÌ½ºÆ½
+    public FixedJoystick joy; // ì¡°ì´ìŠ¤í‹±
     public float speed;
-    public GameObject[] weapons; //ÇÃ·¹ÀÌ¾î ¹«±â°ü·Ã º¯¼ö
-    public bool[] hasWeapons; //ÇÃ·¹ÀÌ¾î ¹«±â°ü·Ã º¯¼ö
-    public GameObject[] grenades; //°øÀüÇÏ´Â ¹°Ã¼¸¦ ÄÁÆ®·ÑÇÏ±â À§ÇØ ¹è¿­º¯¼ö »ı¼º
-    public int hasGrenades; //¼ö·ùÅº
-    public Camera followCamera; //ÇÃ·¹ÀÌ¾î¿¡ ¸ŞÀÎÄ«¸Ş¶ó º¯¼ö ¸¸µë
+    public GameObject[] weapons; //í”Œë ˆì´ì–´ ë¬´ê¸°ê´€ë ¨ ë³€ìˆ˜
+    public bool[] hasWeapons; //í”Œë ˆì´ì–´ ë¬´ê¸°ê´€ë ¨ ë³€ìˆ˜
+    public GameObject[] grenades; //ê³µì „í•˜ëŠ” ë¬¼ì²´ë¥¼ ì»¨íŠ¸ë¡¤í•˜ê¸° ìœ„í•´ ë°°ì—´ë³€ìˆ˜ ìƒì„±
+    public int hasGrenades; //ìˆ˜ë¥˜íƒ„
+    public Camera followCamera; //í”Œë ˆì´ì–´ì— ë©”ì¸ì¹´ë©”ë¼ ë³€ìˆ˜ ë§Œë“¬
     public GameManager manager;
 
-    //¾ÆÀÌÅÛ º¯¼ö ¼±¾ğ
-    public int ammo; //Åº¾à
-    public int health; //Ã¼·Â
-    public int score; //Á¡¼ö
+    //ì•„ì´í…œ ë³€ìˆ˜ ì„ ì–¸
+    public int ammo; //íƒ„ì•½
+    public int health; //ì²´ë ¥
+    public int score; //ì ìˆ˜
 
-    //°¢ ¼öÄ¡ÀÇ ÃÖ´ë°ªÀ» ÀúÀåÇÒ º¯¼ö »ı¼º
+    //ê° ìˆ˜ì¹˜ì˜ ìµœëŒ€ê°’ì„ ì €ì¥í•  ë³€ìˆ˜ ìƒì„±
     public int maxAmmo;
     public int maxCoin;
     public int maxHealth;
     public int maxHasGrenades;
 
-    float hAxis; //input Axis °ªÀ» ¹ŞÀ» Àü¿ªº¯¼ö ¼±¾ğ
+    float hAxis; //input Axis ê°’ì„ ë°›ì„ ì „ì—­ë³€ìˆ˜ ì„ ì–¸
     float vAxis;
 
-    bool fDown; //Å°ÀÔ·Â
-    bool rDown; //ÀçÀåÀü º¯¼ö
+    bool fDown; //í‚¤ì…ë ¥
+    bool rDown; //ì¬ì¥ì „ ë³€ìˆ˜
     bool iDown;
-    bool sDown1; //¹«±â±³Ã¼ 1¹øÀåºñ
-    bool sDown2; //¹«±â±³Ã¼ 2¹øÀåºñ
-    bool sDown3; //¹«±â±³Ã¼ 3¹øÀåºñ
-    bool jDodge; // È¸ÇÇ
+    bool sDown1; //ë¬´ê¸°êµì²´ 1ë²ˆì¥ë¹„
+    bool sDown2; //ë¬´ê¸°êµì²´ 2ë²ˆì¥ë¹„
+    bool sDown3; //ë¬´ê¸°êµì²´ 3ë²ˆì¥ë¹„
+    bool jDodge; // íšŒí”¼
 
-    bool isDodge; //È¸ÇÇ¿©ºÎ
-    bool isSwap; //¹«±â±³Ã¼µ¿¾È¿¡ ¾Æ¹«°Íµµ ¸øÇÏ°ÔÇÔ
+    bool isDodge; //íšŒí”¼ì—¬ë¶€
+    bool isSwap; //ë¬´ê¸°êµì²´ë™ì•ˆì— ì•„ë¬´ê²ƒë„ ëª»í•˜ê²Œí•¨
     bool isReload;
-    bool isFireReady = true; //°ø°İÁØºñ
-    bool isBorder; //º® Ãæµ¹ ÇÃ·¹±× º¯¼ö
-    bool isDamage; //¹«Àû Å¸ÀÓ
+    bool isFireReady = true; //ê³µê²©ì¤€ë¹„
+    bool isBorder; //ë²½ ì¶©ëŒ í”Œë ˆê·¸ ë³€ìˆ˜
+    bool isDamage; //ë¬´ì  íƒ€ì„
     public bool isShop;
     bool isDead;
     bool isSwing = false;
@@ -51,214 +51,214 @@ public class Player : MonoBehaviour
     Vector3 moveVec;
     Vector3 dodgeVec;
 
-    Rigidbody rigid; //¹°¸®È¿°ú¸¦ ³»±âÀ§ÇØ
+    Rigidbody rigid; //ë¬¼ë¦¬íš¨ê³¼ë¥¼ ë‚´ê¸°ìœ„í•´
     Animator anim;
 
-    MeshRenderer[] meshs; //¹è¿­ º¯¼ö Ãß°¡
+    MeshRenderer[] meshs; //ë°°ì—´ ë³€ìˆ˜ ì¶”ê°€
 
 
-    GameObject nearObject; //Æ®¸®°Å µÈ ¾ÆÀÌÅÛÀ» ÀúÀåÇÏ±â À§ÇÑ º¯¼ö ¼±¾ğ
-    public Weapon equipWeapon; //±âÁ¸¿¡ ÀåÂøµÈ ¹«±â¸¦ ÀúÀåÇÏ´Â º¯¼ö¸¦ ¼±¾ğ, È°¿ë  
+    GameObject nearObject; //íŠ¸ë¦¬ê±° ëœ ì•„ì´í…œì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ ì„ ì–¸
+    public Weapon equipWeapon; //ê¸°ì¡´ì— ì¥ì°©ëœ ë¬´ê¸°ë¥¼ ì €ì¥í•˜ëŠ” ë³€ìˆ˜ë¥¼ ì„ ì–¸, í™œìš©  
 
     public GameObject bullet;
     Bullet bulletdamage;
 
     //int equipWeaponIndex = -1;
-    float fireDelay; //°ø°İµô·¹ÀÌ
+    float fireDelay; //ê³µê²©ë”œë ˆì´
 
     void Awake()
     {
-        rigid = GetComponent<Rigidbody>(); //À§ÂÊ¿¡ ÀÖ±â ¶§¹®¿¡ inchildren ¾ÈÇØµµµÊ
-        anim = GetComponentInChildren<Animator>();
+        rigid = GetComponent<Rigidbody>(); //ìœ„ìª½ì— ìˆê¸° ë•Œë¬¸ì— inchildren ì•ˆí•´ë„ë¨
+        anim = GetComponentInChildren<Animator>(); // ì• ë‹ˆë©”ì´í„° ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜´
         meshs = GetComponentsInChildren<MeshRenderer>();
         Defaultbullet();
-        PlayerPrefs.SetInt("MaxScore", 100);
+        //PlayerPrefs.SetInt("MaxScore", 100); // ì„ì˜ë¡œ ë§¥ìŠ¤ ìŠ¤ì½”ì–´ ì„¤ì •
     }
 
-    void Defaultbullet()
+    void Defaultbullet()// ì´ì•Œë°ë¯¸ì§€ ì´ˆê¸°í™” í•¨ìˆ˜
     {
-        bulletdamage = bullet.GetComponent<Bullet>();
-        bulletdamage.damage = 7;
+        bulletdamage = bullet.GetComponent<Bullet>(); // Bullet ìŠ¤í¬ë¦½íŠ¸ ê°€ì ¸ì˜¤ê¸°
+        bulletdamage.damage = 7; // ì´ì•Œë°ë¯¸ì§€ì˜ damageë¥¼ 7ë¡œ ì„¤ì •
     }
 
    
     void Update()
     {
-        GetInput();
-        Move();
-        Turn();
+        GetInput(); //ì…ë ¥
+        Move(); // ì´ë™
+        Turn(); // íšŒì „
         //Attack();
-        //Reload(); //ÀçÀåÀü ÇÔ¼ö
+        //Reload(); //ì¬ì¥ì „ í•¨ìˆ˜
         //Dodge();
         //Swap();
-        Interation();
+        Interation(); // ë¬´ê¸° í­ë“
     }
 
     void GetInput()
     {
-        hAxis = joy.Horizontal; // Axis°ªÀ» Á¤¼ö·Î ¹İÈ¯ÇÏ´Â ÇÔ¼ö(¿À¸¥ÂÊ¿ŞÂÊ ÄÁÆ®·Ñ)
-        vAxis = joy.Vertical; //(À§¾Æ·¡ ÄÁÆ®·Ñ)
-        //hAxis = Input.GetAxisRaw("Horizontal");
-        //vAxis = Input.GetAxisRaw("Vertical");
+        hAxis = joy.Horizontal; // ì¡°ì´ìŠ¤í‹± xì¶• ì…ë ¥
+        vAxis = joy.Vertical; // ì¡°ì´ìŠ¤í‹± yì¶• ì…ë ¥
+        //hAxis = Input.GetAxisRaw("Horizontal");  // xì¶• í‚¤ë³´ë“œì…ë ¥, Axisê°’ì„ ì •ìˆ˜ë¡œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
+        //vAxis = Input.GetAxisRaw("Vertical"); // yì¶• í‚¤ë³´ë“œì…ë ¥
 
-        //fDown = Input.GetButton("Fire1"); //¸¶¿î½º ¿ŞÂÊ ´©¸£¸é ¾îÅÃ (downÀ» »©¸é ²Ú´©¸£°í ÀÖ¾îµµ ÀÛµ¿ °¡´ÉÇÔ)
-        rDown = Input.GetButtonDown("Reload"); // r¹öÆ°À» ´©¸£¸é ÀçÀåÀüÇÔ.
-        iDown = Input.GetButtonDown("Interation"); //eÅ°¸¦ ´©¸£¸é iDown È°¼ºÈ­µÊ (Edit -> project setting)
-        sDown1 = Input.GetButtonDown("Swap1"); //¹«±â 1¹øÅ°¸¦ ¹ŞÀ½
-        sDown2 = Input.GetButtonDown("Swap2"); //¹«±â 2¹øÅ°¸¦ ¹ŞÀ½
-        sDown3 = Input.GetButtonDown("Swap3"); //¹«±â 3¹øÅ°¸¦ ¹ŞÀ½
-        jDodge = Input.GetButton("Jump");
+        //fDown = Input.GetButton("Fire1"); //ë§ˆìš´ìŠ¤ ì™¼ìª½ ëˆ„ë¥´ë©´ ì–´íƒ (downì„ ë¹¼ë©´ ê¾¹ëˆ„ë¥´ê³  ìˆì–´ë„ ì‘ë™ ê°€ëŠ¥í•¨)
+        rDown = Input.GetButtonDown("Reload"); // rë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ì¬ì¥ì „í•¨.
+        iDown = Input.GetButtonDown("Interation"); //eí‚¤ë¥¼ ëˆ„ë¥´ë©´ iDown í™œì„±í™”ë¨ (Edit -> project setting)
+        sDown1 = Input.GetButtonDown("Swap1"); //ë¬´ê¸° 1ë²ˆí‚¤ë¥¼ ë°›ìŒ
+        sDown2 = Input.GetButtonDown("Swap2"); //ë¬´ê¸° 2ë²ˆí‚¤ë¥¼ ë°›ìŒ
+        sDown3 = Input.GetButtonDown("Swap3"); //ë¬´ê¸° 3ë²ˆí‚¤ë¥¼ ë°›ìŒ
+        jDodge = Input.GetButton("Jump"); //ìŠ¤í˜ì´ìŠ¤ë°” ì í”„í‚¤
     }
 
-    void Move()
+    void Move() // ì´ë™
     {
-        moveVec = new Vector3(hAxis, 0, vAxis).normalized; //µ¿½Ã¿¡ ´­·¶À»¶§ 1·Î º¯È¯
+        moveVec = new Vector3(hAxis, 0, vAxis).normalized; //ë™ì‹œì— ëˆŒë €ì„ë•Œ 1ë¡œ ë³€í™˜
 
         if (isDodge)
-            moveVec = dodgeVec; // È¸ÇÇ¸¦ ÇÏ°í ÀÖÀ»°æ¿ì ¿òÁ÷ÀÓ º¤ÅÍ -> È¸ÇÇ¹æÇâ º¤ÅÍ·Î ¹Ù²î´Â ÄÚµå(È¸ÇÇÇÏ¸é¼­ ´Ù¸¥ ¹æÇâÅ° »ç¿ëºÒ°¡)
+            moveVec = dodgeVec; // ì›€ì§ì„ ë²¡í„° -> íšŒí”¼ë°©í–¥ ë²¡í„°ë¡œ ë°”ë€ŒëŠ” ì½”ë“œ(íšŒí”¼í•˜ë©´ì„œ ë‹¤ë¥¸ ë°©í–¥í‚¤ ì‚¬ìš©ë¶ˆê°€)
         
-        if (isShot || isSwing || isSwap || isReload || !isFireReady || isShop || isDead) //¹«±â ±³Ã¼½Ã ¿òÁ÷ÀÓµµ ¸ØÃã ,ÀåÀüÁß, °ø°İÁß¿¡´Â ÀÌµ¿ºÒ°¡
+        if (isShot || isSwing || isSwap || isReload || !isFireReady || isShop || isDead) // ì›ê±°ë¦¬ê³µê²©, ê·¼ì ‘ê³µê²©, ë¬´ê¸°êµì²´, ì¬ì¥ì „, ìƒì ì´ìš©, ì£½ì—ˆì„ë•Œ ì´ë™ë¶ˆê°€
             moveVec = Vector3.zero;
 
-        if (!isBorder) //ÇÃ·¡±× º¯¼ö¸¦ ÀÌµ¿ Á¦ÇÑ Á¶°ÇÀ¸·Î È°¿ëÇÏ±â.
+        if (!isBorder) //í”Œë˜ê·¸ ë³€ìˆ˜ë¥¼ ì´ë™ ì œí•œ ì¡°ê±´ìœ¼ë¡œ í™œìš©í•˜ê¸°.
         {
-            transform.position += moveVec * speed * Time.deltaTime; //shift ´©¸£¸é ¼Óµµ ´À·ÁÁü
+            transform.position += moveVec * speed * Time.deltaTime;  // ì´ë™ì†ë„
         }
 
 
-        anim.SetBool("isRun", moveVec != Vector3.zero); //¶Ù´Â »óÅÂ´Â 0ÀÌ ¾Æ´Ï¸é ¶Ü
+        anim.SetBool("isRun", moveVec != Vector3.zero); // ì´ë™ë²¡í„°ê°€ 0ì´ ì•„ë‹ê²½ìš°(ê°€ë§ŒíˆìˆëŠ”ê²½ìš°ì œì™¸) isRun ì• ë‹ˆë©”ì´ì…˜ ë™ì‘
     }
 
 
 
-    void Turn()
+    void Turn() // ìºë¦­í„° íšŒì „
     {
-        //#1. Å°º¸µå¿¡ ÀÇÇÑ È¸Àü
-        transform.LookAt(transform.position + moveVec); //¿ì¸®°¡ ³ª¾Æ°¡´Â ¹æÇâÀ¸·Î ¹Ù·Î ¹Ù¶óº»´Ù.
+        //#1. í‚¤ë³´ë“œì— ì˜í•œ íšŒì „
+        transform.LookAt(transform.position + moveVec); // ì§€ì •ëœ ë²¡í„°ê°’ìœ¼ë¡œ íšŒì „ì‹œì¼œì£¼ëŠ” í•¨ìˆ˜ì‚¬ìš©
     }
 
-    public void Attack()
+    public void Attack() // ê³µê²©
     {
-        if (equipWeapon == null) //¼Õ¿¡ ¾Æ¹«°Íµµ ¾øÀ¸¸é
+        if (equipWeapon == null) //ì†ì— ë¬´ê¸°ê°€ ì•„ë¬´ê²ƒë„ ì—†ìœ¼ë©´ ë¦¬í„´
             return;
 
-        else if(equipWeapon.type == Weapon.Type.Melee) // ±ÙÁ¢¹«±âÀÏ¶§
+        else if(equipWeapon.type == Weapon.Type.Melee) // ê·¼ì ‘ë¬´ê¸°ì¼ë•Œ
         {
             //fireDelay += Time.deltaTime;
-            //isFireReady = equipWeapon.meleerate < fireDelay; //°ø°İµô·¹ÀÌ¿¡ ½Ã°£À» ´õÇØÁÖ°í °ø°İ°¡´É ¿©ºÎ¸¦ È®ÀÎ
+            //isFireReady = equipWeapon.meleerate < fireDelay; //ê³µê²©ë”œë ˆì´ì— ì‹œê°„ì„ ë”í•´ì£¼ê³  ê³µê²©ê°€ëŠ¥ ì—¬ë¶€ë¥¼ í™•ì¸
             
             
-            if (!isSwing && !isDodge && !isSwap && !isShop && !isDead) //°ø°İÇÒ¶§ °°ÀÌ ¸ø´©¸£´Â °ª ¼³Á¤
+            if (!isSwing && !isDodge && !isSwap && !isShop && !isDead)  // ìŠ¤ìœ™, íšŒí”¼, ë¬´ê¸°êµì²´, ìƒì ì´ìš©, ì£½ìŒìƒíƒœê°€ ì•„ë‹ë•Œ ê³µê²© ë¶ˆê°€
             {
                 isSwing = true;
-                equipWeapon.Use(); //Á¶°ÇÀÌ ÃæÁ·µÇ¸é ¹«±â¿¡ ÀÖ´Â ÇÔ¼ö ½ÇÇà
-                anim.SetTrigger("doSwing"); //¹«±â Å¸ÀÔ¿¡ µû¶ó ´Ù¸¥ Æ®¸®°Å ½ÇÇà
-                //fireDelay = 0; //°ø°İ µô·¹ÀÌ¸¦ 0À¸·Î µ¹·Á¼­ ´ÙÀ½ °ø°İ±îÁö ±â´Ù¸®µµ·Ï ÀÛ¼º
-                Invoke("SwingOut", 0.8f);
+                equipWeapon.Use(); // weaponì— ìˆëŠ” Use í•¨ìˆ˜ ì‹¤í–‰
+                anim.SetTrigger("doSwing");// doSwing ì• ë‹ˆë©”ì´ì…˜ ë™ì‘
+                //fireDelay = 0; //ê³µê²© ë”œë ˆì´ë¥¼ 0ìœ¼ë¡œ ëŒë ¤ì„œ ë‹¤ìŒ ê³µê²©ê¹Œì§€ ê¸°ë‹¤ë¦¬ë„ë¡ ì‘ì„±
+                Invoke("SwingOut", 0.8f); // swingout í•¨ìˆ˜ë¥¼ 0.8ì´ˆë’¤ì— ì‹¤í–‰
             }
         }
-        else // ¿ø°Å¸® ¹«±âÀÏ¶§
+        else // ì›ê±°ë¦¬ ë¬´ê¸°ì¼ë•Œ
         {
-            if (equipWeapon.curAmmo == 0) // ÃÑ¾ËÀÌ ¾øÀ¸¸é ÀåÀü
+            if (equipWeapon.curAmmo == 0) // ì´ì•Œì´ ì—†ìœ¼ë©´ ì¥ì „
             {
-                Reload(); 
+                Reload();   // ì¥ì •í•¨ìˆ˜ ì‹¤í–‰
             }
 
             else
             {
                 //fireDelay += Time.deltaTime;
-                //isFireReady = equipWeapon.rate < fireDelay; //°ø°İµô·¹ÀÌ¿¡ ½Ã°£À» ´õÇØÁÖ°í °ø°İ°¡´É ¿©ºÎ¸¦ È®ÀÎ
+                //isFireReady = equipWeapon.rate < fireDelay; //ê³µê²©ë”œë ˆì´ì— ì‹œê°„ì„ ë”í•´ì£¼ê³  ê³µê²©ê°€ëŠ¥ ì—¬ë¶€ë¥¼ í™•ì¸
 
-                if (!isShot && !isDodge && !isSwap && !isShop && !isDead) //°ø°İÇÒ¶§ °°ÀÌ ¸ø´©¸£´Â °ª ¼³Á¤
+                if (!isShot && !isDodge && !isSwap && !isShop && !isDead)// ê³µê²©, íšŒí”¼, ë¬´ê¸°êµì²´, ìƒì ì´ìš©, ì£½ìŒìƒíƒœê°€ ì•„ë‹ë•Œ ê³µê²© ë¶ˆê°€
                 {
                     isShot = true;
-                    equipWeapon.Use(); //Á¶°ÇÀÌ ÃæÁ·µÇ¸é ¹«±â¿¡ ÀÖ´Â ÇÔ¼ö ½ÇÇà
-                    anim.SetTrigger("doShot"); //¹«±â Å¸ÀÔ¿¡ µû¶ó ´Ù¸¥ Æ®¸®°Å ½ÇÇà
-                    //fireDelay = 0; //°ø°İ µô·¹ÀÌ¸¦ 0À¸·Î µ¹·Á¼­ ´ÙÀ½ °ø°İ±îÁö ±â´Ù¸®µµ·Ï ÀÛ¼º
-                    Invoke("ShotOut", equipWeapon.rate);
+                    equipWeapon.Use(); // weaponì— ìˆëŠ” Use í•¨ìˆ˜ ì‹¤í–‰
+                    anim.SetTrigger("doShot");  // doShot ì• ë‹ˆë©”ì´ì…˜ ë™ì‘
+                    //fireDelay = 0; //ê³µê²© ë”œë ˆì´ë¥¼ 0ìœ¼ë¡œ ëŒë ¤ì„œ ë‹¤ìŒ ê³µê²©ê¹Œì§€ ê¸°ë‹¤ë¦¬ë„ë¡ ì‘ì„±
+                    Invoke("ShotOut", equipWeapon.rate); // Shotout í•¨ìˆ˜ë¥¼ ê³µê²©ì†ë„ë§Œí¼ ë’¤ì— ì‹¤í–‰ -> ê³µê²©ì†ë„ê°€ ë¹ ë¥´ë©´ ë” ì¼ì° shot ìƒíƒœë¥¼ íƒˆì¶œ
                 }
             }
         }
     }
 
-    void ShotOut()
+    void ShotOut() // Shot ì—¬ë¶€ë¥¼ falseë¡œ
     {
         isShot = false;
     }
 
-    void SwingOut()
+    void SwingOut() // Swing ì—¬ë¶€ë¥¼ falseë¡œ
     {
         isSwing = false;
     }
 
-    void Reload() //ÀåÀü ÇÔ¼ö ±¸Çö
+    void Reload() //ì¥ì „ í•¨ìˆ˜ êµ¬í˜„
     {
-        if (equipWeapon == null) //¼Õ¿¡ ¹«±â°¡ ¾øÀ¸¸é ÀåÀüÀÌ ¾È‰Î
+        if (equipWeapon == null) //ì†ì— ë¬´ê¸°ê°€ ì—†ìœ¼ë©´ ì¥ì „ ë¶ˆê°€
             return;
 
-        if (equipWeapon.type == Weapon.Type.Melee) //±ÙÁ¢ ¹«±âÀÏ °æ¿ì ÀåÀüÀÌ ¾È‰Î
+        if (equipWeapon.type == Weapon.Type.Melee) //ê·¼ì ‘ ë¬´ê¸°ì¼ ê²½ìš° ì¥ì „ ë¶ˆê°€
             return;
 
-        //¿ì¸®´Â ÃÑ¾ËÀÌ ¾ø±â ¶§¹®¿¡ µû·Î ammo ¼³Á¤À» ¾ÈÇÔ.
+        //ìš°ë¦¬ëŠ” ì´ì•Œì´ ì—†ê¸° ë•Œë¬¸ì— ë”°ë¡œ ammo ì„¤ì •ì„ ì•ˆí•¨.
 
-        if(!isDodge && !isSwap && isFireReady && !isShop && !isDead) //Á¡ÇÁ, È¸ÇÇ, ¹«±â º¯°æ¶§´Â ÀåÀüÀÌ ºÒ°¡.
+        if(!isDodge && !isSwap && isFireReady && !isShop && !isDead) //ì í”„, íšŒí”¼, ë¬´ê¸° ë³€ê²½ë•ŒëŠ” ì¥ì „ì´ ë¶ˆê°€.
         {
             isReload = true;
-            anim.SetTrigger("doReload"); //¾Ö´Ï¸ŞÀÌÅÍ Æ®¸®°Å È£Ãâ°ú ÇÃ·¡±×º¯¼ö º¯È­ ÀÛ¼º
+            anim.SetTrigger("doReload"); // doReload ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘
             
-            Invoke("ReloadOut", 1.6f); //ÀåÀü½Ã°£ ¼³Á¤ 3ÃÊ ¡Ú
+            Invoke("ReloadOut", 1.6f); // 1.6ì´ˆ ë’¤ì— ReloadOut í•¨ìˆ˜ ì‹¤í–‰
         }
     }
 
-    void ReloadOut()
+    void ReloadOut() // ì¥ì „ ë í•¨ìˆ˜
     {
         //int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
-        equipWeapon.curAmmo = equipWeapon.maxAmmo; //¹«±â´Â Åº¿¡ µé¾î°¨
-        //ammo -= reAmmo; //ÇÃ·¹ÀÌ¾î°¡ ¼ÒÁöÇÏ°í ÀÖ´Â ÅºÀº »ç¶óÁø´Ù.
+        equipWeapon.curAmmo = equipWeapon.maxAmmo; // ë¬´ê¸°ì˜ í˜„ì¬ íƒ„ì•½ì„ ìµœëŒ€ íƒ„ì•½ìœ¼ë¡œ ì±„ì›Œì¤Œ
+        //ammo -= reAmmo; //í”Œë ˆì´ì–´ê°€ ì†Œì§€í•˜ê³  ìˆëŠ” íƒ„ì€ ì‚¬ë¼ì§„ë‹¤
         isReload = false;
     }
 
-    public void Dodge()
+    public void Dodge() // íšŒí”¼ ë™ì‘
     {
-        if (moveVec != Vector3.zero && !isDodge && !isSwap && !isShop && !isDead)  // Á¡ÇÁ ÇÑ°è¼³Á¤ (¿òÁ÷ÀÓÀÌ zero°¡ ¾Æ´Ò¶§ "È¸ÇÇ(Dodge)")
+        if (moveVec != Vector3.zero && !isDodge && !isSwap && !isShop && !isDead)  // ì í”„ í•œê³„ì„¤ì • (ì›€ì§ì„ì´ zeroê°€ ì•„ë‹ë•Œ "íšŒí”¼(Dodge)")
         {
-            dodgeVec = moveVec; //¹«ºêº¤ÅÍ¸¦ ´åÁöº¤ÅÍ¿¡ ´ëÀÔ
-            speed *= 2; //½ºÇÇµå ¼Óµµ µÎ¹è
-            anim.SetTrigger("doDodge");
+            dodgeVec = moveVec; //ë¬´ë¸Œë²¡í„°ë¥¼ ë‹·ì§€ë²¡í„°ì— ëŒ€ì…, íšŒí”¼ì¤‘ ë°©í–¥ì„ ëª»ë°”ê¾¸ê²Œí•¨
+            speed *= 2;  // ì´ë™ ì†ë„ ë‘ë°°
+            anim.SetTrigger("doDodge");  // doDodge í•¨ìˆ˜ ì‹¤í–‰
             isDodge = true;
 
-            Invoke("DodgeOut", 0.5f); // ´åÁöÇÒ¶§ 0.4ÃÊÀÇ ½Ã°£Â÷(µô·¹ÀÌ)¸¦ ÁÜ <¹Ù·Î ´åÁö ¾ÈµÅ°Ô ¹æÁö ÄÚµå>
+            Invoke("DodgeOut", 0.5f);  // ë‹·ì§€í• ë•Œ 0.4ì´ˆì˜ ì‹œê°„ì°¨(ë”œë ˆì´)ë¥¼ ì¤Œ <ë°”ë¡œ ë‹·ì§€ ì•ˆë¼ê²Œ ë°©ì§€ ì½”ë“œ>
         }
     }
     
-    void DodgeOut() //½Ã°£Â÷¸¦ Áà¼­ isDodge¸¦ false
+    void DodgeOut() //ì‹œê°„ì°¨ë¥¼ ì¤˜ì„œ isDodgeë¥¼ false
     {
         speed *= 0.5f;
         isDodge = false;
     }
 
-    public void Swap() //¹«±â ±³Ã¼ ÇÔ¼ö
+    public void Swap() //ë¬´ê¸° êµì²´ í•¨ìˆ˜
     {
-        //if (sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0)) //0À» Áßº¹ÇØ¼­ ´©¸£´Â°Í
-        //  return; //½ÇÇàÇÏ¸é¾È‰Î
-        //if (sDown2 && (!hasWeapons[1] || equipWeaponIndex == 1)) //1À» Áßº¹ÇØ¼­ ´©¸£´Â°Í
-        //   return; //½ÇÇàÇÏ¸é¾È‰Î
-        //if (sDown3 && (!hasWeapons[2] || equipWeaponIndex == 2)) //2À» Áßº¹ÇØ¼­ ´©¸£´Â°Í
-        //   return; //½ÇÇàÇÏ¸é¾È‰Î
+        //if (sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0)) //0ì„ ì¤‘ë³µí•´ì„œ ëˆ„ë¥´ëŠ”ê²ƒ
+        //  return; //ì‹¤í–‰í•˜ë©´ì•ˆÂ‰
+        //if (sDown2 && (!hasWeapons[1] || equipWeaponIndex == 1)) //1ì„ ì¤‘ë³µí•´ì„œ ëˆ„ë¥´ëŠ”ê²ƒ
+        //   return; //ì‹¤í–‰í•˜ë©´ì•ˆÂ‰
+        //if (sDown3 && (!hasWeapons[2] || equipWeaponIndex == 2)) //2ì„ ì¤‘ë³µí•´ì„œ ëˆ„ë¥´ëŠ”ê²ƒ
+        //   return; //ì‹¤í–‰í•˜ë©´ì•ˆÂ‰
 
         //int weaponIndex = -1;
-        //if (sDown1) weaponIndex = 0; //1¹øÅ° ´©¸£¸é ÀÎµ¦½º 0
-        //if (sDown2) weaponIndex = 1; //2¹øÅ° ´©¸£¸é ÀÎµ¦½º 1
-        //if (sDown3) weaponIndex = 2; //3¹øÅ° ´©¸£¸é ÀÎµ¦½º 2
-        if (equipWeapon == null) return;
+        //if (sDown1) weaponIndex = 0; //1ë²ˆí‚¤ ëˆ„ë¥´ë©´ ì¸ë±ìŠ¤ 0
+        //if (sDown2) weaponIndex = 1; //2ë²ˆí‚¤ ëˆ„ë¥´ë©´ ì¸ë±ìŠ¤ 1
+        //if (sDown3) weaponIndex = 2; //3ë²ˆí‚¤ ëˆ„ë¥´ë©´ ì¸ë±ìŠ¤ 2
+        if (equipWeapon == null) return; 
 
-        if (!hasWeapons[0] || !hasWeapons[2]) return;
+        if (!hasWeapons[0] || !hasWeapons[2]) return;  // í•´ë¨¸ì™€ ë¨¸ì‹ ê±´ì„ ê°–ê³ ìˆì§€ ì•Šìœ¼ë©´ ë¦¬í„´
 
-        if (!isDodge && !isDead)
+        if (!isDodge && !isDead) // íšŒí”¼ì¤‘, ì£½ìŒìƒíƒœê°€ ì•„ë‹ë•Œ
         {
-            if (equipWeapon != null)
+            if (equipWeapon != null) // ì†ì— ë¬´ê¸°ë¥¼ ë“¤ê³ ìˆìœ¼ë©´
             {
-                equipWeapon.gameObject.SetActive(false);
+                equipWeapon.gameObject.SetActive(false); // ì†ì— ë“  ë¬´ê¸°ë¥¼ ì•ˆë³´ì´ê²Œ ì„¤ì •
             }
 
             if (equipWeapon.type == Weapon.Type.Melee)
@@ -266,57 +266,57 @@ public class Player : MonoBehaviour
                 equipWeapon = weapons[2].GetComponent<Weapon>();
                 equipWeapon.gameObject.SetActive(true);
 
-                anim.SetTrigger("doSwap"); //¾Ö´Ï¸ŞÀÌÅÍ ¼ÂÆÃ
+                anim.SetTrigger("doSwap"); // ë¬´ê¸°êµì²´ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 
-                isSwap = true; //±³Ã¼µ¿¾È¿¡ ¾Æ¹«°Íµµ ¸øÇÏ°Ô ÇÔ
+                isSwap = true; // êµì²´ ì—¬ë¶€ë¥¼ trueë¡œ
 
-                Invoke("SwapOut", 0.4f);
+                Invoke("SwapOut", 0.4f); // êµì²´ ë í•¨ìˆ˜ë¥¼ 0.4ì´ˆ ë’¤ì— í˜¸ì¶œ
             }
             else
             {
-                equipWeapon = weapons[0].GetComponent<Weapon>();
-                equipWeapon.gameObject.SetActive(true);
+                equipWeapon = weapons[0].GetComponent<Weapon>(); // í•´ë¨¸ì˜ Weapone ìŠ¤í¬ë¦½íŠ¸ë¥¼ ê°€ì ¸ì˜´
+                equipWeapon.gameObject.SetActive(true); // í•´ë¨¸ë¥¼ ë³´ì´ê²Œ ì„¤ì •
 
-                anim.SetTrigger("doSwap"); //¾Ö´Ï¸ŞÀÌÅÍ ¼ÂÆÃ
+                anim.SetTrigger("doSwap");  // ë¬´ê¸°êµì²´ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 
-                isSwap = true; //±³Ã¼µ¿¾È¿¡ ¾Æ¹«°Íµµ ¸øÇÏ°Ô ÇÔ
+                isSwap = true; //êµì²´ë™ì•ˆì— ì•„ë¬´ê²ƒë„ ëª»í•˜ê²Œ í•¨
 
-                Invoke("SwapOut", 0.4f);
+                Invoke("SwapOut", 0.4f); // êµì²´ ë í•¨ìˆ˜ë¥¼ 0.4ì´ˆ ë’¤ì— í˜¸ì¶œ
             }
         }
     }
 
-    void SwapOut() //±³Ã¼ ½Ã°£ÀÌ ³¡³ª°í ´Ù½Ã ´Ù¸¥ ÀÛ¾÷À» ÇÒ¼ö ÀÖµµ·Ï ÇÔ
+    void SwapOut() // ë¬´ê¸°êµì²´ ë í•¨ìˆ˜
     {
         isSwap = false;
     }
     
-    void Interation() // e´©¸£¸é µ¿ÀÛÇÏ´Â°Å
+    void Interation()  // ìƒí˜¸ì‘ìš© í•¨ìˆ˜, ë¬´ê¸°ì— ë‹¤ê°€ê°€ë©´ ìë™ìŠµë“ ë° ìë™ìœ¼ë¡œ ë¬´ê¸°ë¡œ 
     {
-        if(nearObject != null && !isDodge && !isDead) //ÇÃ·¹ÀÌ¾î ±ÙÃ³¿¡ ¹°°ÇÀÌ ÀÖ´Ù, Á¡ÇÁ³ª È¸ÇÇ¶§ »óÈ£ÀÛ¿ë ¸øÇÏ°Ô ¸·À½.
+        if(nearObject != null && !isDodge && !isDead)  // ê·¼ì²˜ì— ì˜¤ë¸Œì íŠ¸ ì¡´ì¬, íšŒí”¼ì¤‘X, ì£½ìŒìƒíƒœX ì´ë©´
         {
-            if(nearObject.tag == "Weapon") //¹«±â¸¦ °¡Áö°í ÀÖ´Ù
+            if(nearObject.tag == "Weapon") // ì˜¤ë¸Œì íŠ¸ì˜ íƒœê·¸ê°€ Weaponì´ë©´
             {
-                Item item = nearObject.GetComponent<Item>();
-                int weaponIndex = item.value;
-                hasWeapons[weaponIndex] = true; //¹«±â ÀÎµ¦½º¸¦ Æ®·ç·Î ¹Ù²Ş
+                Item item = nearObject.GetComponent<Item>(); // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ì˜ Item ìŠ¤í¬ë¦½íŠ¸ ê°€ì ¸ì˜´
+                int weaponIndex = item.value;  // í•´ë‹¹ ë¬´ê¸°ì˜ ë²¨ë¥˜ë¥¼ ì›¨í°ì¸ë±ìŠ¤ë¡œ ê°€ì ¸ì˜´
+                hasWeapons[weaponIndex] = true; // í•´ë‹¹ ë¬´ê¸°ë¥¼ ê°€ì¡Œë‹¤ê³  trueë¡œ ë³€ê²½
 
-                Destroy(nearObject); //¾ÆÀÌÅÛ Á¤º¸¸¦ °¡Á®¿Í¼­ ÇØ´ç ¹«±â ÀÔ¼ö¸¦ Ã¼Å©
+                Destroy(nearObject);  // ìŠµë“í•œ ì•„ì´í…œì„ ì”¬ì—ì„œ ì‚­ì œ
             }
 
-            if (!hasWeapons[0] && hasWeapons[2] && equipWeapon == null)
+            if (!hasWeapons[0] && hasWeapons[2] && equipWeapon == null) // í•´ë¨¸ìŠµë“X, ì†ì—ë¬´ê¸°X, ì„œë¸Œë¨¸ì‹ ê±´ì„ ìŠµë“í–ˆì„ë•Œ
             {
                 equipWeapon = weapons[2].GetComponent<Weapon>();
                 equipWeapon.gameObject.SetActive(true);
 
-                anim.SetTrigger("doSwap");
+                anim.SetTrigger("doSwap");  // ë¬´ê¸°êµì²´ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 
-                isSwap = true;
-
+                isSwap = true;  // ë¬´ê¸°êµì²´ ì—¬ë¶€ë¥¼ trueë¡œ
+ 
                 Invoke("SwapOut", 0.4f);
             }
 
-            if (!hasWeapons[2] && hasWeapons[0] && equipWeapon == null)
+            if (!hasWeapons[2] && hasWeapons[0] && equipWeapon == null) // ì„œë¸Œë¨¸ì‹ ê±´ìŠµë“X, ì†ì—ë¬´ê¸°X, í•´ë¨¸ì…ìˆ˜ì‹œ
             {
                 equipWeapon = weapons[0].GetComponent<Weapon>();
                 equipWeapon.gameObject.SetActive(true);
@@ -331,26 +331,26 @@ public class Player : MonoBehaviour
         
     }
 
-    void FreezeRotation()
+    void FreezeRotation() // íšŒì „ë²„ê·¸ ë°©ì§€ í•¨ìˆ˜
     {
-        rigid.angularVelocity = Vector3.zero; //È¸Àü¼Óµµ¸¦ vector3 Á¦·Î·Î ¼³Á¤ÇÏ¸é È¸Àü¼Óµµ¸¦ 0À¸·Î ÇÏ±â ¶§¹®¿¡ ½º½º·Î µµ´Â Çö»óÀÌ ¾ø¾îÁü.
+        rigid.angularVelocity = Vector3.zero; //íšŒì „ì†ë„ë¥¼ vector3 ì œë¡œë¡œ ì„¤ì •í•˜ë©´ íšŒì „ì†ë„ë¥¼ 0ìœ¼ë¡œ í•˜ê¸° ë•Œë¬¸ì— ìŠ¤ìŠ¤ë¡œ ë„ëŠ” í˜„ìƒì´ ì—†ì–´ì§.
     }
 
     void StopToWall()
     {
-        Debug.DrawRay(transform.position, transform.forward * 5, Color.green); //½ÃÀÛÀ§Ä¡, ½î´Â ¹æÇâ, ray±æÀÌ, »ö±ò
-        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall")); //º® ¹°Ã¼¶û Ãæµ¹À» ÇÏ°Ô µÇ¸é bool °ªÀÌ true°¡ µÈ´Ù. true°ªÀÌ move¿¡´Ù°¡ Á¦ÇÑ°ªÀ» ÁÜ
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green); //ì‹œì‘ìœ„ì¹˜, ì˜ëŠ” ë°©í–¥, rayê¸¸ì´, ìƒ‰ê¹”
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall")); //ë²½ ë¬¼ì²´ë‘ ì¶©ëŒì„ í•˜ê²Œ ë˜ë©´ bool ê°’ì´ trueê°€ ëœë‹¤. trueê°’ì´ moveì—ë‹¤ê°€ ì œí•œê°’ì„ ì¤Œ
     }
 
-    void FixedUpdate()
+    void FixedUpdate() // ë§¤ í”„ë ˆì„ë§ˆë‹¤ í˜¸ì¶œí•˜ëŠ” 
     {
-        FreezeRotation(); //ÇÃ·¹ÀÌ¾î°¡ ÀÚµ¿À¸·Î È¸ÀüÇÏ´Â°Å ¸·´Â ÇÔ¼ö
-        StopToWall(); //º® °üÅëÇÏ´Â°Å ¸·´Â ÇÔ¼ö
+        FreezeRotation(); //í”Œë ˆì´ì–´ê°€ ìë™ìœ¼ë¡œ íšŒì „í•˜ëŠ”ê±° ë§‰ëŠ” í•¨ìˆ˜
+        StopToWall(); //ë²½ ê´€í†µí•˜ëŠ”ê±° ë§‰ëŠ” í•¨ìˆ˜
     }
 
 
 
-    void OnTriggerEnter(Collider other) //Æ®¸®°Å ÀÌº¥Æ®
+    void OnTriggerEnter(Collider other) //íŠ¸ë¦¬ê±° ì´ë²¤íŠ¸
     {
         if (other.tag == "Item")
         {
@@ -358,63 +358,63 @@ public class Player : MonoBehaviour
             switch (item.type)
             {
                 case Item.Type.Ammo:
-                    ammo += item.value; //enum Å¸ÀÔ¿¡ ¸Â°Ô ¾ÆÀÌÅÛ ¼öÄ¡¸¦ ÇÃ·¹ÀÌ¾î ¼öÄ¡¿¡ Àû¿ëÇÏ±â
+                    ammo += item.value; //enum íƒ€ì…ì— ë§ê²Œ ì•„ì´í…œ ìˆ˜ì¹˜ë¥¼ í”Œë ˆì´ì–´ ìˆ˜ì¹˜ì— ì ìš©í•˜ê¸°
                     if (ammo > maxAmmo)
                         ammo = maxAmmo;
                     break;
                 case Item.Type.Heart:
-                    health += item.value; //enum Å¸ÀÔ¿¡ ¸Â°Ô ¾ÆÀÌÅÛ ¼öÄ¡¸¦ ÇÃ·¹ÀÌ¾î ¼öÄ¡¿¡ Àû¿ëÇÏ±â
+                    health += item.value; //enum íƒ€ì…ì— ë§ê²Œ ì•„ì´í…œ ìˆ˜ì¹˜ë¥¼ í”Œë ˆì´ì–´ ìˆ˜ì¹˜ì— ì ìš©í•˜ê¸°
                     if (health > maxHealth)
                         health = maxHealth;
                     break;
                 case Item.Type.Grenade:
-                    grenades[hasGrenades].SetActive(true); //¼ö·ùÅº °³¼ö´ë·Î °øÀüÃ¼°¡ È°¼ºÈ­ µÇµµ·Ï ±¸Çö
-                    hasGrenades += item.value; //enum Å¸ÀÔ¿¡ ¸Â°Ô ¾ÆÀÌÅÛ ¼öÄ¡¸¦ ÇÃ·¹ÀÌ¾î ¼öÄ¡¿¡ Àû¿ëÇÏ±â
+                    grenades[hasGrenades].SetActive(true); //ìˆ˜ë¥˜íƒ„ ê°œìˆ˜ëŒ€ë¡œ ê³µì „ì²´ê°€ í™œì„±í™” ë˜ë„ë¡ êµ¬í˜„
+                    hasGrenades += item.value; //enum íƒ€ì…ì— ë§ê²Œ ì•„ì´í…œ ìˆ˜ì¹˜ë¥¼ í”Œë ˆì´ì–´ ìˆ˜ì¹˜ì— ì ìš©í•˜ê¸°
                     if (hasGrenades > maxHasGrenades)
                         hasGrenades = maxHasGrenades;
                     break;
             }
-            Destroy(other.gameObject); //¸ÔÀº ¾ÆÀÌÅÛÀº »èÁ¦
+            Destroy(other.gameObject); //ë¨¹ì€ ì•„ì´í…œì€ ì‚­ì œ
         }
-        else if (other.tag == "EnemyBullet") //OnTriggerEnter()¿¡ enemybullet °æ¿ì Ãß°¡
+        else if (other.tag == "EnemyBullet") //OnTriggerEnter()ì— enemybullet ê²½ìš° ì¶”ê°€
         {
             if (!isDamage)
             {
                 Bullet enemyBullet = other.GetComponent<Bullet>();
-                health -= enemyBullet.damage; //bullet ½ºÅ©¸³Æ® ÀçÈ°¿ëÇÏ¿© µ¥¹ÌÁö Àû¿ë
+                health -= enemyBullet.damage; //bullet ìŠ¤í¬ë¦½íŠ¸ ì¬í™œìš©í•˜ì—¬ ë°ë¯¸ì§€ ì ìš©
 
                 bool isBossAtk = other.name == "Boss Melee Area";
-                StartCoroutine(OnDamage(isBossAtk)); //ÄÚ¸£Æ¾ Àû¿ë.
+                StartCoroutine(OnDamage(isBossAtk)); //ì½”ë¥´í‹´ ì ìš©.
             }
-            if (other.GetComponent<Rigidbody>() != null)  //¹Ì»çÀÏ °ø°İ½Ã ¸ÂÀ¸¸é »ç¶óÁü
+            if (other.GetComponent<Rigidbody>() != null)  //ë¯¸ì‚¬ì¼ ê³µê²©ì‹œ ë§ìœ¼ë©´ ì‚¬ë¼ì§
             {
                 Destroy(other.gameObject);
             }
         }
     }
 
-    IEnumerator OnDamage(bool isBossAtk) //¸®¾×¼ÇÀ» À§ÇÑ ÄÚ·çÆ¾ »ı¼º ¹× È£Ãâ
+    IEnumerator OnDamage(bool isBossAtk) // ë°ë¯¸ì§€ ë§ì•˜ì„ ë•Œ
     {
         isDamage = true;
 
-        foreach(MeshRenderer mesh in meshs) //¸ğµç ÀçÁúÀÇ »ö»óÀ» º¯°æ
+        foreach(MeshRenderer mesh in meshs) //ëª¨ë“  ì¬ì§ˆì˜ ìƒ‰ìƒì„ ë³€ê²½
         {
             mesh.material.color = Color.yellow;
         }
 
         if (isBossAtk)
-            rigid.AddForce(transform.forward * -25, ForceMode.Impulse); //ÇÇ°İ ÄÚ·çÆ¾¿¡¼­ ³Ë¹éÀ» addforce()·Î ±¸Çö
+            rigid.AddForce(transform.forward * -25, ForceMode.Impulse); //í”¼ê²© ì½”ë£¨í‹´ì—ì„œ ë„‰ë°±ì„ addforce()ë¡œ êµ¬í˜„
 
         if (health <= 0 && !isDead)
         {
             OnDie();
         }
 
-        yield return new WaitForSeconds(1f); //¹«ÀûÅ¸ÀÓ Á¶Á¤
+        yield return new WaitForSeconds(1f); //ë¬´ì íƒ€ì„ ì¡°ì •
 
         isDamage = false;
         
-        foreach (MeshRenderer mesh in meshs) //¸ğµç ÀçÁúÀÇ »ö»óÀ» º¯°æ
+        foreach (MeshRenderer mesh in meshs) //ëª¨ë“  ì¬ì§ˆì˜ ìƒ‰ìƒì„ ë³€ê²½
         {
             mesh.material.color = Color.white;
         }
@@ -425,41 +425,41 @@ public class Player : MonoBehaviour
         
     }
 
-    private void OnDie() // Á×´Â ¸ğ¼Í 
+    private void OnDie() // ì£½ëŠ” ëª¨ì…© 
     {
-        anim.SetTrigger("doDie");
-        isDead = true;
-        manager.GameOver();
+        anim.SetTrigger("doDie"); // ì£½ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
+        isDead = true; // ì£½ìŒ ìƒíƒœ ì„¤ì •
+        manager.GameOver(); // ê²Œì„ì˜¤ë²„ í•¨ìˆ˜ ì‹œì‘
     }
 
-    void OnTriggerStay(Collider other) //Æ®¸®°Å ÀÌº¥Æ®
+    void OnTriggerStay(Collider other) //íŠ¸ë¦¬ê±° ì´ë²¤íŠ¸
     {
-        if (other.tag == "Weapon" || other.tag == "Shop") //weapon ÅÂ±×¸¦ Á¶°ÇÀ¸·Î ÇÏ¿© ·ÎÁ÷ ÀÛ¼º
-            nearObject = other.gameObject; //near¿ÀºêÁ§Æ®¿¡ ÀúÀå
+        if (other.tag == "Weapon" || other.tag == "Shop") //weapon íƒœê·¸ë¥¼ ì¡°ê±´ìœ¼ë¡œ í•˜ì—¬ ë¡œì§ ì‘ì„±
+            nearObject = other.gameObject; //nearì˜¤ë¸Œì íŠ¸ì— ì €ì¥
     }
 
-    void OnTriggerExit(Collider other) //Æ®¸®°Å ÀÌº¥Æ®
+    void OnTriggerExit(Collider other) //íŠ¸ë¦¬ê±° ì´ë²¤íŠ¸
     {
-        if (other.tag == "Weapon") //¿µ¿ª¿¡¼­ ¹ş¾î³µÀ»¶§ ³Î°ªÀ» Áà¼­ ºñ¿ò
+        if (other.tag == "Weapon") //ì˜ì—­ì—ì„œ ë²—ì–´ë‚¬ì„ë•Œ ë„ê°’ì„ ì¤˜ì„œ ë¹„ì›€
             nearObject = null;
       
     }
 
-    public void setShop(bool state) // »óÁ¡ ÀÌ¿ë ÅÂ±×
+    public void setShop(bool state) // ìƒì  ì´ìš© íƒœê·¸
     {
         isShop = state;
     }
 
-    public void bullUpgrade() // ÃÑ¾Ë µ¥¹ÌÁö Áõ°¡
+    public void bullUpgrade() // ì´ì•Œ ë°ë¯¸ì§€ ì¦ê°€
     {
         bulletdamage.damage += 10;
     }
 
-    public void speedUpgrade() // ÀÌµ¿¼Óµµ Áõ°¡
+    public void speedUpgrade() // ì´ë™ì†ë„ ì¦ê°€
     {
         speed *= 1.2f;
     }
-    public void maxbullUpgrade() // ÃÖ´ë ÅºÃ¢ Áõ°¡
+    public void maxbullUpgrade() // ìµœëŒ€ íƒ„ì°½ ì¦ê°€
     {
         equipWeapon.gameObject.SetActive(false);
         equipWeapon = weapons[2].GetComponent<Weapon>();
@@ -467,7 +467,7 @@ public class Player : MonoBehaviour
         equipWeapon.maxAmmo += 10;
         equipWeapon.curAmmo = equipWeapon.maxAmmo;
     }
-    public void maxhpUpgrade() // ÃÖ´ëÃ¼·Â Áõ°¡
+    public void maxhpUpgrade() // ìµœëŒ€ì²´ë ¥ ì¦ê°€
     {
         maxHealth += 50;
         health = maxHealth;
