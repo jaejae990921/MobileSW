@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
-    // º¯¼ö °ü¸®
+    // ë³€ìˆ˜ ê´€ë¦¬
     public GameObject menuCam;
     public GameObject gameCam;
     public Boss boss;
@@ -23,28 +23,28 @@ public class GameManager : MonoBehaviour
 
     public GameObject ShopZone;
 
-    // Àû »ı¼º
+    // ì  ìƒì„±
     public Transform[] enemyZones;
     public GameObject[] enemies;
     public List<int> enemyList;
 
-    //UI °ü¸®
-    public GameObject menuPanel; // ¸Ş´º
-    public Text maxScoretext; // ÀÚ½ÅÀÇ ÃÖ°íÁ¡¼ö
+    //UI ê´€ë¦¬
+    public GameObject menuPanel; // ë©”ë‰´
+    public Text maxScoretext; // ìì‹ ì˜ ìµœê³ ì ìˆ˜
 
-    public GameObject gamePanel; // ÀÎ°ÔÀÓ
-    public Text ScoreText; // Á¡¼ö
-    public Text stageText; // ½ºÅ×ÀÌÁö
-    public Text playTimeText; // ÇÃ·¹ÀÌ ½Ã°£
+    public GameObject gamePanel; // ì¸ê²Œì„
+    public Text ScoreText; // ì ìˆ˜
+    public Text stageText; // ìŠ¤í…Œì´ì§€
+    public Text playTimeText; // í”Œë ˆì´ ì‹œê°„
 
     public GameObject overPanel;
     public Text curScoreText;
     public Text bestScoreText;
 
 
-    public Player player; // ÇÃ·¹ÀÌ¾î ½ºÅ×ÀÌÅÍ½º
-    public Text playerHealthText; // ÇÇ
-    public Text playerAmmoText; // ÃÑ¾Ë
+    public Player player; // í”Œë ˆì´ì–´ ìŠ¤í…Œì´í„°ìŠ¤
+    public Text playerHealthText; // í”¼
+    public Text playerAmmoText; // ì´ì•Œ
 
     private void Awake()
     {
@@ -53,49 +53,50 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void GameStart() // °ÔÀÓ½ÃÀÛ ¹öÆ° ÇÔ¼ö
+    public void GameStart() // ê²Œì„ì‹œì‘ ë²„íŠ¼ í•¨ìˆ˜
     {
-        menuCam.SetActive(false); // ¸Ş´º È­¸é ºñÈ°¼ºÈ­ 
-        gameCam.SetActive(true); // °ÔÀÓÈ­¸é ½ÃÀÛ
+        menuCam.SetActive(false); // ë©”ë‰´ í™”ë©´ ë¹„í™œì„±í™” 
+        gameCam.SetActive(true); // ê²Œì„í™”ë©´ ì‹œì‘
 
-        menuPanel.SetActive(false); // ¸Ş´º ºñÈ°¼ºÈ­
-        gamePanel.SetActive(true);  // °ÔÀÓ È°¼ºÈ­
+        menuPanel.SetActive(false); // ë©”ë‰´ ë¹„í™œì„±í™”
+        gamePanel.SetActive(true);  // ê²Œì„ í™œì„±í™”
 
         player.gameObject.SetActive(true);
         StageEnd();
     }
-    //°ÔÀÓ ¿À¹ö
+    //ê²Œì„ ì˜¤ë²„
     public void GameOver()
     {
         gamePanel.SetActive(false);
         overPanel.SetActive(true);
         curScoreText.text = ScoreText.text;
 
-        int maxScore = PlayerPrefs.GetInt("MaxScore");
-        if (player.score > maxScore)
+        // ìµœê³  ê¸°ë¡ ê²½ì‹ 
+        int maxScore = PlayerPrefs.GetInt("MaxScore"); // í”„ë¦¬íŒ¹ì— ì €ì¥ëœ ë§¥ìŠ¤ ìŠ¤ì½”ì–´ë¥¼ ê°€ì ¸ì˜´
+        if (player.score > maxScore) // ë§¥ìŠ¤ìŠ¤ì½”ì–´ ë³´ë‹¤ í˜„ì¬ ìŠ¤ì½”ì–´ê°€ ë†’ìœ¼ë©´ ê°±ì‹ 
         {
-            bestScoreText.gameObject.SetActive(true);
+            bestScoreText.gameObject.SetActive(true); // best! ë¼ëŠ” ë¬¸êµ¬ í™œì„±í™” 
             PlayerPrefs.SetInt("MaxScore", player.score);
         }
     }
 
-    public void Restart()
+    public void Restart() // ë‹¤ì‹œì‹œì‘ ë²„íŠ¼ 
     {
         SceneManager.LoadScene(0);
 
     }
 
-    // ½ºÅ×ÀÌÁö ½ÃÀÛ
+    // ìŠ¤í…Œì´ì§€ ì‹œì‘
     public void StageStart()
     {
         stage++;
-        ShopZone.SetActive(false);  
+        ShopZone.SetActive(false);  // ê²Œì„ ì‹œì‘ì‹œ ìƒì  ë¹„í™œì„±í™”
 
         foreach(Transform zone in enemyZones)
         {
             zone.gameObject.SetActive(true);
         }
-        isBattle = true; // ÀüÅõ »óÅÂ
+        isBattle = true; // ì „íˆ¬ ìƒíƒœ
         StartCoroutine(InBattle());
     }
 
@@ -103,16 +104,17 @@ public class GameManager : MonoBehaviour
     {
         if (stage % 5 == 0)
         {
-            // 5¶ó¿îµå ¸¶´Ù º¸½º µîÀå
+            // 5ë¼ìš´ë“œ ë§ˆë‹¤ ë³´ìŠ¤ ë“±ì¥
             enemyCntD++;
             GameObject instanceEnemy = Instantiate(enemies[3], enemyZones[0].position, enemyZones[0].rotation);
-            Enemy enemy = instanceEnemy.GetComponent<Enemy>(); // ¸ó½ºÅÍ ½ºÅ©¸³Æ® °¡Á®¿È
+            Enemy enemy = instanceEnemy.GetComponent<Enemy>(); // ëª¬ìŠ¤í„° ìŠ¤í¬ë¦½íŠ¸ ê°€ì ¸ì˜´
             enemy.manager = this;
-            enemy.target = player.transform;    //ÇÃ·¹ÀÌ¾î¸¦ µû¶ó°¡°Ô ÇÔ
+            enemy.target = player.transform;    //í”Œë ˆì´ì–´ë¥¼ ë”°ë¼ê°€ê²Œ í•¨
             boss = instanceEnemy.GetComponent<Boss>();
         }
         else
         {
+            // ëœë¤ìœ¼ë¡œ 3ê°€ì§€ ì¼ë°˜ ëª¬ìŠ¤í„° ì¤‘ í•œë§ˆë¦¬ 
             for (int i = 0; i < stage; i++)
             {
                 int ran = Random.Range(0, 3);
@@ -136,20 +138,20 @@ public class GameManager : MonoBehaviour
 
             while (enemyList.Count > 0)
             {
-                // 4°³ÀÇ ¸ğ¼­¸®¿¡¼­ ·£´ıÇÏ°Ô ¸ó½ºÅÍ µîÀå
+                // 4ê°œì˜ ëª¨ì„œë¦¬ì—ì„œ ëœë¤í•˜ê²Œ ëª¬ìŠ¤í„° ë“±ì¥
                 int ranZone = Random.Range(0, 4);
                 GameObject instanceEnemy = Instantiate(enemies[enemyList[0]], enemyZones[ranZone].position, enemyZones[ranZone].rotation);
-                // prefebsÈ­ Çß±â ¶§¹®¿¡ º¯¼öµéÀ» Ã¤¿ö¾ß µÊ
-                Enemy enemy = instanceEnemy.GetComponent<Enemy>(); // ¸ó½ºÅÍ ½ºÅ©¸³Æ® °¡Á®¿È
-                enemy.target = player.transform;    //ÇÃ·¹ÀÌ¾î¸¦ µû¶ó°¡°Ô ÇÔ
+                // prefebsí™” í–ˆê¸° ë•Œë¬¸ì— ë³€ìˆ˜ë“¤ì„ ì±„ì›Œì•¼ ë¨
+                Enemy enemy = instanceEnemy.GetComponent<Enemy>(); // ëª¬ìŠ¤í„° ìŠ¤í¬ë¦½íŠ¸ ê°€ì ¸ì˜´
+                enemy.target = player.transform;    //í”Œë ˆì´ì–´ë¥¼ ë”°ë¼ê°€ê²Œ í•¨
                 enemy.manager = this;
-                enemyList.RemoveAt(0);  //¼ÒÈ¯µÈ ¸ó½ºÅÍ´Â ¸®½ºÆ®¿¡¼­ »èÁ¦
-                //yield return new WaitForSeconds(4f);    // ¾ÈÇÏ¸é ÇÑ ÇÁ·¹ÀÓ¿¡ ´Ù ³ª¿È
+                enemyList.RemoveAt(0);  //ì†Œí™˜ëœ ëª¬ìŠ¤í„°ëŠ” ë¦¬ìŠ¤íŠ¸ì—ì„œ ì‚­ì œ
+                //yield return new WaitForSeconds(4f);    // ì•ˆí•˜ë©´ í•œ í”„ë ˆì„ì— ë‹¤ ë‚˜ì˜´
             }
 
         }//else
 
-        while (enemyCntA + enemyCntB + enemyCntC + enemyCntD > 0) // ¸ó½ºÅÍ ¼öÀÇ ÇÕÀÌ 0ÀÌ¸é °ÔÀÓ Á¾·á
+        while (enemyCntA + enemyCntB + enemyCntC + enemyCntD > 0) // ëª¬ìŠ¤í„° ìˆ˜ì˜ í•©ì´ 0ì´ë©´ ê²Œì„ ì¢…ë£Œ
         {
           //  Debug.Log(enemyCntA + enemyCntB + enemyCntC + enemyCntD);
             yield return null;
@@ -161,13 +163,13 @@ public class GameManager : MonoBehaviour
 
     public void StageEnd()
     {
-        //ÇÃ·¹ÀÌ¾î ¿øÀ§Ä¡·Î 
+        //í”Œë ˆì´ì–´ ì›ìœ„ì¹˜ë¡œ 
         player.transform.position= Vector3.up * 0.8f;
         foreach (Transform zone in enemyZones)
         {
             zone.gameObject.SetActive(false);
         }
-        //»óÁ¡ È°¼ºÈ­
+        //ìƒì  í™œì„±í™”
         ShopZone.SetActive(true);
         isBattle = false;
         
@@ -176,7 +178,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // ½Ã°£¾÷µ¥ÀÌÆ®
+        // ì‹œê°„ì—…ë°ì´íŠ¸
         if (isBattle)
         {
             playTime += Time.deltaTime;
@@ -185,30 +187,30 @@ public class GameManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        //½ºÄÚ¾î °¡Á®¿À±â
-        ScoreText.text = string.Format("{0:n0}", player.score); // Ãµ´ÜÀ§¸¶´Ù , ³ÖÀ½
+        //ìŠ¤ì½”ì–´ ê°€ì ¸ì˜¤ê¸°
+        ScoreText.text = string.Format("{0:n0}", player.score); // ì²œë‹¨ìœ„ë§ˆë‹¤ , ë„£ìŒ
         stageText.text = "STAGE " + stage;
         
-        //Ã¼·Â 
-        playerHealthText.text = player.health + "/" + player.maxHealth; // Ã¼·Â/ÃÖ´ëÃ¼·Â
+        //ì²´ë ¥ 
+        playerHealthText.text = player.health + "/" + player.maxHealth; // ì²´ë ¥/ìµœëŒ€ì²´ë ¥
         
-        //½Ã°£
+        //ì‹œê°„
         int hour = (int)(playTime / 3600);
         int min = (int)((playTime-hour*3600) / 60);
         int second = (int)playTime % 60;
         playTimeText.text = string.Format("{0:00}", hour) + ":" + string.Format("{0:00}", min) + ":" + string.Format("{0:00}", second) ;
 
-        // ÃÑÀ» µé¾úÀ» ¶§ ÅºÃ¢¼ö º¸¿©ÁÜ
-        if(player.equipWeapon == null) // ¹«±âx
+        // ì´ì„ ë“¤ì—ˆì„ ë•Œ íƒ„ì°½ìˆ˜ ë³´ì—¬ì¤Œ
+        if(player.equipWeapon == null) // ë¬´ê¸°x
         {
             playerAmmoText.text = "-/-";
-        }else if(player.equipWeapon.type == Weapon.Type.Melee) //±ÙÁ¢¹«±â
+        }else if(player.equipWeapon.type == Weapon.Type.Melee) //ê·¼ì ‘ë¬´ê¸°
         {
             playerAmmoText.text = "-/-";
         }
         else
         {
-            //ÇöÀç ÅºÃ¢ / ÃÖ´ëÅºÃ¢
+            //í˜„ì¬ íƒ„ì°½ / ìµœëŒ€íƒ„ì°½
             playerAmmoText.text = player.equipWeapon.curAmmo+ "/" + player.equipWeapon.maxAmmo;
         }
     }
