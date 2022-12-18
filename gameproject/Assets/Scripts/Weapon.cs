@@ -5,74 +5,74 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     public enum Type { Melee, Range };
-    public Type type; //¹«±âÅ¸ÀÔ
-    public int damage = 20; //µ¥¹ÌÁö
-    public float rate; // ¿ø°Å¸® ¹«±â °ø¼Ó
-    public float meleerate; // ±ÙÁ¢¹«±â °ø°İ¼Óµµ 
-    public BoxCollider meleeArea; //¹üÀ§
-    public TrailRenderer trailEffect; //È¿°ú
-    public Transform bulletPos; // ÃÑ¾Ë ¹ß»ç À§Ä¡
-    public GameObject bullet; // ÃÑ¾Ë 
-    public Transform bulletCasePos; // ÅºÇÇ ¹èÃâ À§Ä¡ 
-    public GameObject bulletCase; // ÅºÇÇ
-    public int maxAmmo; //¹«±â ½ºÅ©¸³Æ®¿¡ ÀüÃ¼ Åº¾à
-    public int curAmmo; //ÇöÀç Åº¾à º¯¼ö ¼±¾ğ
+    public Type type; //ë¬´ê¸°íƒ€ì…
+    public int damage = 20; //ë°ë¯¸ì§€
+    public float rate; // ì›ê±°ë¦¬ ë¬´ê¸° ê³µì†
+    public float meleerate; // ê·¼ì ‘ë¬´ê¸° ê³µê²©ì†ë„ 
+    public BoxCollider meleeArea; //ë²”ìœ„
+    public TrailRenderer trailEffect; //íš¨ê³¼
+    public Transform bulletPos; // ì´ì•Œ ë°œì‚¬ ìœ„ì¹˜
+    public GameObject bullet; // ì´ì•Œ 
+    public Transform bulletCasePos; // íƒ„í”¼ ë°°ì¶œ ìœ„ì¹˜ 
+    public GameObject bulletCase; // íƒ„í”¼
+    public int maxAmmo; //ë¬´ê¸° ìŠ¤í¬ë¦½íŠ¸ì— ì „ì²´ íƒ„ì•½
+    public int curAmmo; //í˜„ì¬ íƒ„ì•½ ë³€ìˆ˜ ì„ ì–¸
     
-    public void Use() //¹«±â»ç¿ë ·ÎÁ÷
+    public void Use() //ë¬´ê¸°ì‚¬ìš© ë¡œì§
     {
-        if(type == Type.Melee)
+        if(type == Type.Melee)  // ê·¼ì ‘ë¬´ê¸°ì¼ ê²½ìš°
         {
-            StopCoroutine("Swing"); //·ÎÁ÷ÀÌ ²¿ÀÌÁö ¾Ê°Ô ÁßÁö¸¦ ¸ÕÀúÇÔ
-            StartCoroutine("Swing");
+            StopCoroutine("Swing"); // í˜„ì¬ ìˆ˜í–‰ì¤‘ì¸ ì½”ë£¨í‹´ ì •ì§€
+            StartCoroutine("Swing"); // Swing ì½”ë£¨í‹´ì„ ë‹¤ì‹œ ì‹œì‘
         }
-        else if (type == Type.Range && curAmmo > 0) //³²¾ÆÀÖ´Â ÅºÀÇ °³¼ö°¡ 0º¸´Ù Å¬¶§ ½ô
+        else if (type == Type.Range && curAmmo > 0) //ë‚¨ì•„ìˆëŠ” íƒ„ì˜ ê°œìˆ˜ê°€ 0ë³´ë‹¤ í´ë•Œ ì¨
         {
-            curAmmo--; //¹ß»çÇßÀ»¶§ ammo(Åº) ¼Ò¸ğ
-            StartCoroutine("Shot");
+            curAmmo--; //ë°œì‚¬í–ˆì„ë•Œ ammo(íƒ„) ì†Œëª¨
+            StartCoroutine("Shot"); // ì´ì•Œ ë°œì‚¬ ì½”ë£¨í‹´ ì‹¤í–‰
         }
     }
 
-    IEnumerator Swing() //±ÙÁ¢°ø°İ ÈÖµÎ¸¦¶§ 
+    IEnumerator Swing() //ê·¼ì ‘ê³µê²© íœ˜ë‘ë¥¼ë•Œ 
     {
-        trailEffect.enabled = true;
+        trailEffect.enabled = true // ì´íŒ©íŠ¸ í™œì„±í™”
         //1
-        yield return new WaitForSeconds(0.4f); // ¾ÕÀ¸·Î ³»·Á°¥¶§ 
-        meleeArea.enabled = true; //È°¼ºÈ­ ÄÁÆ®·Ñ
+        yield return new WaitForSeconds(0.4f); // 0.4ì´ˆ ëŒ€ê¸°, ì•ìœ¼ë¡œ ë‚´ë ¤ê°€ë©´ì„œ 
+        meleeArea.enabled = true; // ë¬´ê¸° ê³µê²© ë²”ìœ„ í™œì„±í™”
         
         //2
-        yield return new WaitForSeconds(0.1f); // ÈÖµÎ¸£´Â ¼Óµµ Á¶Àı ¡Ú
-        meleeArea.enabled = false;
+        yield return new WaitForSeconds(0.1f); // 0.1ì´ˆ ëŒ€ê¸°
+        meleeArea.enabled = false; // ë¬´ê¸° ê³µê²¨ ë²”ìœ„ ë¹„í™œì„±í™”
         //3
-        yield return new WaitForSeconds(0.3f);  // ÈÖµÎ¸£´Â ¼Óµµ Á¶Àı ¡Ú
-        trailEffect.enabled = false;
+        yield return new WaitForSeconds(0.3f); // 0.3ì´ˆ ëŒ€ê¸°
+        trailEffect.enabled = false; // ë¬´ê¸° ì´íŒ©íŠ¸ ë¹„í™œì„±í™”
 
         
     }
-    //Use() ¸ŞÀÎ·çÆ¾ -> Swing() ¼­ºê·çÆ¾ -> use() ¸ŞÀÎ·çÆ¾
-    //Use() ¸ŞÀÎ·çÆ¾ + Swing() ÄÚ·çÆ¾ (Co-Op)
+    //Use() ë©”ì¸ë£¨í‹´ -> Swing() ì„œë¸Œë£¨í‹´ -> use() ë©”ì¸ë£¨í‹´
+    //Use() ë©”ì¸ë£¨í‹´ + Swing() ì½”ë£¨í‹´ (Co-Op)
 
-    IEnumerator Shot()
+    IEnumerator Shot() // ì›ê±°ë¦¬ ê³µê²© ì½”ë£¨í‹´
     {
-        //#1 ÃÑ¾Ë ¹ß»ç
-        GameObject intantBullet = Instantiate(bullet, bulletPos.position, bulletPos.rotation); //ÃÑ¾Ë ÀÎ½ºÅÏ½ºÈ­ ÇÏ±â
+        //#1 ì´ì•Œ ë°œì‚¬
+        GameObject intantBullet = Instantiate(bullet, bulletPos.position, bulletPos.rotation); //ì´ì•Œ ì¸ìŠ¤í„´ìŠ¤í™” í•˜ê¸°
         Rigidbody bulletRigid = intantBullet.GetComponent<Rigidbody>();
-        bulletRigid.velocity = bulletPos.forward * 50; //ÀÎ½ºÅÏ½ºÈ­µÈ ÃÑ¾Ë¿¡ ¼Óµµ Àû¿ëÇÏ±â(ÃÑ¾ËÀÌ ³¯¾Æ°¡´Â ¼Óµµ)
-        yield return null; //ÄÚ¸£Æ¾Àº yield°¡ ¾øÀ¸¸é ¿¡·¯°¡ ¶ä
+        bulletRigid.velocity = bulletPos.forward * 50; //ì¸ìŠ¤í„´ìŠ¤í™”ëœ ì´ì•Œì— ì†ë„ ì ìš©í•˜ê¸°(ì´ì•Œì´ ë‚ ì•„ê°€ëŠ” ì†ë„)
+        yield return null; //ì½”ë¥´í‹´ì€ yieldê°€ ì—†ìœ¼ë©´ ì—ëŸ¬ê°€ ëœ¸
 
-        //#2. ÅºÇÇ ¹èÃâ
+        //#2. íƒ„í”¼ ë°°ì¶œ
         GameObject intantCase = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
         Rigidbody caseRigid = intantCase.GetComponent<Rigidbody>();
-        Vector3 caseVec = bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3); //ÀÎ½ºÅÏ½ºÈ­µÈ ÅºÇÇ¿¡ ·£´ıÇÑ Èû °¡ÇÏ±â
+        Vector3 caseVec = bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3); //ì¸ìŠ¤í„´ìŠ¤í™”ëœ íƒ„í”¼ì— ëœë¤í•œ í˜ ê°€í•˜ê¸°
         caseRigid.AddForce(caseVec, ForceMode.Impulse);
-        caseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse); //ÅºÇÇ È¸Àü
+        caseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse); //íƒ„í”¼ íšŒì „
     }
 
-    public void wpUpgrade() // ¸ÁÄ¡ °ø°İ·Â Áõ°¡ 
+    public void wpUpgrade() // ë§ì¹˜ ê³µê²©ë ¥ ì¦ê°€ 
     {
         damage += 100;
     }
 
-    public  void gunspeed() // ¿ø°Å¸® ¹«±â °ø°İ¼Óµµ Áõ°¡
+    public  void gunspeed() // ì›ê±°ë¦¬ ë¬´ê¸° ê³µê²©ì†ë„ ì¦ê°€
     {
         rate *= 0.7f;
     }
