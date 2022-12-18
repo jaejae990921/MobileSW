@@ -13,12 +13,12 @@ public class Shop : MonoBehaviour
     public Player enterPlayer;
 
    
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)  // ìƒì  ê¸°ëŠ¥
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player") // Playerê°€ ë“¤ì–´ì˜¤ë©´
         {
-            enterPlayer = other.GetComponent<Player>();
-            uiGroup.anchoredPosition = Vector3.zero;
+            enterPlayer = other.GetComponent<Player>(); // ìƒì  UIë¥¼ í™”ë©´ ì¤‘ì•™ìœ¼ë¡œ ë³´ì—¬ì¤Œ
+            uiGroup.anchoredPosition = Vector3.zero; // Playerì˜ ìƒíƒœë¥¼ ìƒì  ì´ìš© ì¤‘ìœ¼ë¡œ ì„¤ì •
             enterPlayer.setShop(true);
         }
     }
@@ -26,23 +26,23 @@ public class Shop : MonoBehaviour
     public void Buy(string index)
     {
         switch (index) {
-            case "1¹ø": // ±ÙÁ¢ ¹«±â °­È­
+            case "1ë²ˆ": // ê·¼ì ‘ ë¬´ê¸° ê°•í™”
                 enterPlayer.equipWeapon.wpUpgrade();
                 break;
-            case "2¹ø": // ¿ø°Å¸® ¹«±â °­È­
+            case "2ë²ˆ": // ì›ê±°ë¦¬ ë¬´ê¸° ê°•í™”
                 enterPlayer.bullUpgrade();
                 break;
-            case "3¹ø": //ÅºÃ¢¼ö Áõ°¡
+            case "3ë²ˆ": //íƒ„ì°½ìˆ˜ ì¦ê°€
                 enterPlayer.maxbullUpgrade();
                 break;
-            case "4¹ø": // ÃÖ´ë Ã¼·Â Áõ°¡
+            case "4ë²ˆ": // ìµœëŒ€ ì²´ë ¥ ì¦ê°€
                 enterPlayer.maxhpUpgrade();
                 break;
-            case "5¹ø": // ¿¬»ç ¼Óµµ Áõ°¡
+            case "5ë²ˆ": // ì—°ì‚¬ ì†ë„ ì¦ê°€
                 enterPlayer.equipWeapon.gunspeed();
                 break;
-            case "6¹ø": // ÀÌµ¿¼Óµµ Áõ°¡          
-                enterPlayer.speedUpgrade(); // ÀÌµ¿¼Óµµ
+            case "6ë²ˆ": // ì´ë™ì†ë„ ì¦ê°€          
+                enterPlayer.speedUpgrade(); // ì´ë™ì†ë„
                 break;
             default:
                 break;
@@ -52,12 +52,12 @@ public class Shop : MonoBehaviour
      
     }
 
-    public void Exit()
+    public void Exit() // ìƒì  ì¢…ë£Œ
     {
         
-        uiGroup.anchoredPosition = Vector3.down * 1000;
-        enterPlayer.setShop(false);
-        manager.StageStart();
+        uiGroup.anchoredPosition = Vector3.down * 1000; // ìƒì  ê¸°ëŠ¥ ì¢…ë£Œì‹œ UIë¥¼ í™”ë©´ ë°‘ìœ¼ë¡œ ë‚´ë¦¼
+        enterPlayer.setShop(false); // Playerì˜ ìƒíƒœë¥¼ ìƒì ì´ìš© í•˜ì§€ì•Šë„ë¡ ë³€ê²½
+        manager.StageStart();  // ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ì‹œì‘
      
     }
 
