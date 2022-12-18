@@ -34,7 +34,7 @@ public class Weapon : MonoBehaviour
 
     IEnumerator Swing() //근접공격 휘두를때 
     {
-        trailEffect.enabled = true // 이팩트 활성화
+        trailEffect.enabled = true ;// 이팩트 활성화
         //1
         yield return new WaitForSeconds(0.4f); // 0.4초 대기, 앞으로 내려가면서 
         meleeArea.enabled = true; // 무기 공격 범위 활성화
