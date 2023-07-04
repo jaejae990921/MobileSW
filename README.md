@@ -49,9 +49,9 @@ This project is licensed under the [MIT License](/path/to/license).
 
 
 ## 팀원  
-- 심재운 : https://github.com/jaejae990921
-- 심규철 : https://github.com/sphy1597
-- 최광혁 : https://github.com/806hyogi
+- Jaewoon Sim: [GitHub](https://github.com/jaejae990921)
+- Gyucheol Sim: [GitHub](https://github.com/sphy1597)
+- Kwanghyeok Choi: [GitHub](https://github.com/806hyogi)
 
 ## 라이선스
 이 프로젝트는 [MIT 라이선스](/path/to/license)를 따릅니다.
